@@ -1,7 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import { red } from "@material-ui/core/colors";
 
@@ -30,7 +32,7 @@ function PatientDetailComponent(props) {
 
   return (
     <StandardLayout>
-      <Typography variant="title">Patient {patientId}</Typography>
+      <Typography variant="h6">Patient {patientId}</Typography>
 
       {currentPatient && (
         <Typography>
@@ -39,6 +41,10 @@ function PatientDetailComponent(props) {
       )}
 
       {currentPatientError && <pre style={{ color: red[500] }}>{JSON.stringify(currentPatientError, null, 2)}</pre>}
+
+      <Button component={Link} to="/" variant="outlined" color="primary">
+        Back
+      </Button>
     </StandardLayout>
   );
 }

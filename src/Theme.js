@@ -7,5 +7,8 @@ export const theme = createMuiTheme({
     secondary: {
       main: "#F1A627"
     }
+  },
+  typography: {
+    useNextVariants: true
   }
 });

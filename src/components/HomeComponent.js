@@ -32,7 +32,7 @@ function HomeComponent({ classes, patientIds }) {
             patientId={id}
             Layout={({ currentPatientError, currentPatient, currentPatientLoading }) => (
               <ListItem button component={Link} to={`/patient/${id}`}>
-                <Typography variant="title">Patient: {id}</Typography>
+                <Typography variant="h6">Patient: {id}</Typography>
 
                 {currentPatientLoading && (
                   <DelayComponent wait={100}>

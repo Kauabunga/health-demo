@@ -24,7 +24,7 @@ function LoginComponent(props) {
 
   return (
     <NarrowLayout>
-      <Typography variant="title">Authenticate with client credentials</Typography>
+      <Typography variant="h6">Authenticate with client credentials</Typography>
 
       <Button onClick={handleLogin} className={classes.login} variant="contained" color="primary">
         Login

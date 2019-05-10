@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -7,7 +8,6 @@ import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import SettingsIcon from "@material-ui/icons/Settings";
 import HomeIcon from "@material-ui/icons/Home";
-import { Link } from "react-router-dom";
 
 const styles = {
   root: {
@@ -25,7 +25,7 @@ function NavigationComponent(props) {
     <div className={classes.root}>
       <AppBar position="static" style={{ boxShadow: "none" }}>
         <Toolbar>
-          <Typography variant="h6" color="inherit">
+          <Typography component={Link} to="/" variant="h6" color="inherit" style={{ textDecoration: "none" }}>
             Ryman Healthcare Demo
           </Typography>
 

@@ -1,6 +1,23 @@
 import React from "react";
 import { decorate, observable, action } from "mobx";
 import store from "store";
+import qs from "qs";
+
+const { hash } = document.location;
+const startingQueryParams = qs.parse(String(hash || "").replace("#", ""));
+const { client_id, client_secret } = startingQueryParams;
+
+if (client_id) {
+  store.set("client_id", client_id);
+}
+
+if (client_secret) {
+  store.set("client_secret", client_secret);
+}
+
+if (client_id || client_secret) {
+  removeHash();
+}
 
 class CredentialsState {
   client_id = store.get("client_id") || "";
@@ -42,3 +59,22 @@ const decorated = decorate(CredentialsState, {
 export const credentialsStore = new decorated();
 
 export default React.createContext(credentialsStore);
+
+function removeHash() {
+  var scrollV,
+    scrollH,
+    loc = window.location;
+  if ("pushState" in window.history) {
+    window.history.pushState("", document.title, loc.pathname + loc.search);
+  } else {
+    // Prevent scrolling by storing the page's current scroll offset
+    scrollV = document.body.scrollTop;
+    scrollH = document.body.scrollLeft;
+
+    loc.hash = "";
+
+    // Restore the scroll offset, should be flicker free
+    document.body.scrollTop = scrollV;
+    document.body.scrollLeft = scrollH;
+  }
+}
