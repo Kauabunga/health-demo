@@ -1,12 +1,12 @@
-import React from "react";
-import { decorate, observable, action } from "mobx";
-import axios from "axios";
+import React from 'react';
+import { decorate, observable, action } from 'mobx';
+import axios from 'axios';
 
-import { credentialsStore } from "./CredentialsState";
-import { authStore } from "./AuthState";
+import { credentialsStore } from './CredentialsState';
+import { authStore } from './AuthState';
 
 class PatientState {
-  patientIds = ["2143.1"];
+  patientIds = ['2143.1'];
 
   patientLoading = {};
   patientError = {};
@@ -21,11 +21,12 @@ class PatientState {
       const { session } = authStore;
       const { access_token } = session || {};
 
-      const { status, data } = await axios.get(`${base_uri}${base_path_patient}/${patientId}`, {
+      const url = `${base_uri}${base_path_patient}/${patientId}`;
+      const { status, data } = await axios.get(`https://ryman-healthcare-demo-api.carsonbruce.now.sh/${url}`, {
         headers: {
           Authorization: `Bearer ${access_token}`,
-          apikey: client_id
-        }
+          apikey: client_id,
+        },
       });
 
       if (status !== 200) {
@@ -34,13 +35,13 @@ class PatientState {
 
       this.patients = { ...this.patients, [patientId]: data };
     } catch (error) {
-      console.log("Error getting patient", patientId, error);
+      console.log('Error getting patient', patientId, error);
       this.patientError = {
         ...this.patientError,
         [patientId]: {
           message: error.message,
-          error: error
-        }
+          error: error,
+        },
       };
     }
 
@@ -54,7 +55,7 @@ const decorated = decorate(PatientState, {
   patientError: observable,
   patients: observable,
 
-  loadPatient: action
+  loadPatient: action,
 });
 
 export const patientStore = new decorated();
