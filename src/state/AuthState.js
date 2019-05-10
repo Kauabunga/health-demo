@@ -10,6 +10,7 @@ class AuthState {
   isAuthenticated = !!store.get("session");
   session = store.get("session") || null;
   error = null;
+  errorMessage = null;
   authenticating = false;
 
   updateSession = session => {
@@ -28,6 +29,7 @@ class AuthState {
   handleLogin = async () => {
     this.loading = true;
     this.error = null;
+    this.errorMessage = null;
 
     const { base_path_oauth, base_uri, client_id, client_secret } = credentialsStore;
     try {
@@ -47,9 +49,10 @@ class AuthState {
       }
 
       this.updateSession(data);
-    } catch (err) {
-      console.error("Error doing login", err);
-      this.error = err;
+    } catch (error) {
+      console.error("Error doing login", error);
+      this.errorMessage = error.message;
+      this.error = error;
       this.updateSession(null);
     }
   };
@@ -59,6 +62,7 @@ const decorated = decorate(AuthState, {
   isAuthenticated: observable,
   session: observable,
   error: observable,
+  errorMessage: observable,
   authenticating: observable,
 
   handleLogin: action,

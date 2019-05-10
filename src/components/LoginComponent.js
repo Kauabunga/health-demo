@@ -13,11 +13,14 @@ const styles = {
   },
   login: {
     marginTop: 24
+  },
+  config: {
+    marginTop: 12
   }
 };
 
 function LoginComponent(props) {
-  const { classes, handleLogin, authenticating } = props;
+  const { classes, handleLogin, errorMessage, authenticating } = props;
 
   return (
     <NarrowLayout>
@@ -28,7 +31,9 @@ function LoginComponent(props) {
         {authenticating && <CircularProgress size={24} className={classes.buttonProgress} />}
       </Button>
 
-      <Button component={Link} to="/config" className={classes.login} variant="outlined" color="primary">
+      <Typography color="error">{errorMessage}&nbsp;</Typography>
+
+      <Button component={Link} to="/config" className={classes.config} variant="outlined" color="primary">
         Config
       </Button>
     </NarrowLayout>

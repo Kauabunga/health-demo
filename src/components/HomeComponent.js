@@ -7,7 +7,9 @@ import ListItem from "@material-ui/core/ListItem";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import { red } from "@material-ui/core/colors";
 
+import DelayComponent from "./DelayComponent";
 import AuthState from "../state/AuthState";
 import PatientContainer from "../containers/PatientContainer";
 import StandardLayout from "../layout/StandardLayout";
@@ -32,12 +34,15 @@ function HomeComponent({ classes, patientIds }) {
               <ListItem button component={Link} to={`/patient/${id}`}>
                 <Typography variant="title">Patient: {id}</Typography>
 
-                {currentPatientLoading && <CircularProgress />}
+                {currentPatientLoading && (
+                  <DelayComponent wait={100}>
+                    <CircularProgress />
+                  </DelayComponent>
+                )}
+
                 {currentPatient && <pre>{JSON.stringify(currentPatient, null, 2)}</pre>}
                 {currentPatientError && (
-                  <Typography color="error">
-                    <pre>{JSON.stringify(currentPatientError, null, 2)}</pre>
-                  </Typography>
+                  <pre style={{ color: red[500] }}>{JSON.stringify(currentPatientError, null, 2)}</pre>
                 )}
               </ListItem>
             )}

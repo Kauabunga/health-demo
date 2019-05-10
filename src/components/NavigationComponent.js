@@ -23,7 +23,7 @@ function NavigationComponent(props) {
 
   return (
     <div className={classes.root}>
-      <AppBar position="static">
+      <AppBar position="static" style={{ boxShadow: "none" }}>
         <Toolbar>
           <Typography variant="h6" color="inherit">
             Ryman Healthcare Demo
