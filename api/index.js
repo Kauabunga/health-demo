@@ -14,22 +14,27 @@ const agent = new https.Agent({
 });
 
 app.get('*', async (req, res) => {
+  const { headers, originalUrl } = req;
+  const { authorization, apikey, accept } = headers;
+  const filteredHeaders = { authorization, apikey, accept };
+  const url = decodeURIComponent(originalUrl.substring(1));
   try {
-    const { headers, originalUrl } = req;
-
-    const url = originalUrl.substring(1);
-
     console.log(url, headers);
-    const { data, status } = await axios.get(decodeURIComponent(originalUrl.substring(1)), {
-      headers,
-      httpsAgent: agent,
+    const { data, status } = await axios.get(url, {
+      headers: filteredHeaders,
+      // httpsAgent: agent,
     });
+
     console.log(status, data);
 
     return res.status(status).json(data);
   } catch (err) {
     console.error(err);
-    return res.status(500).send(err.message);
+    return res.status(500).json({
+      message: err.message,
+      headers: filteredHeaders,
+      url,
+    });
   }
 });
 

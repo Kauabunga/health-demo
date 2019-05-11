@@ -19,12 +19,16 @@ class PatientState {
     try {
       const { client_id, base_uri, base_path_patient } = credentialsStore;
       const { session } = authStore;
-      const { access_token } = session || {};
+      const { access_token, id_token } = session || {};
+      const Authorization = `Bearer ${id_token}`;
+      // const Authorization = `Bearer ${access_token}`;
 
       const url = `${base_uri}${base_path_patient}/${patientId}`;
+      // const { status, data } = await axios.get(`https://ryman-healthcare-demo-api.carsonbruce.now.sh/${url}`, {
       const { status, data } = await axios.get(`https://ryman-healthcare-demo-api.carsonbruce.now.sh/${url}`, {
         headers: {
-          Authorization: `Bearer ${access_token}`,
+          Accept: 'application/json',
+          Authorization,
           apikey: client_id,
         },
       });
