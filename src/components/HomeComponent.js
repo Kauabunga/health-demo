@@ -1,26 +1,29 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
-import { withStyles } from '@material-ui/core/styles';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import { red } from '@material-ui/core/colors';
+import React from "react";
+import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
+import { withStyles } from "@material-ui/core/styles";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
+import ListItemAvatar from "@material-ui/core/ListItemAvatar";
+import Avatar from "@material-ui/core/Avatar";
+import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import { red } from "@material-ui/core/colors";
 
-import DelayComponent from './DelayComponent';
-import AuthState from '../state/AuthState';
-import PatientContainer from '../containers/PatientContainer';
-import StandardLayout from '../layout/StandardLayout';
+import DelayComponent from "./DelayComponent";
+import AuthState from "../state/AuthState";
+import PatientContainer from "../containers/PatientContainer";
+import StandardLayout from "../layout/StandardLayout";
 
 const styles = {
   list: {
-    margin: '24px 0 48px',
+    margin: "24px 0 48px"
   },
+  listItem: {
+    height: 96
+  }
 };
 
 function HomeComponent({ classes, patientIds }) {
@@ -34,7 +37,7 @@ function HomeComponent({ classes, patientIds }) {
             key={id}
             patientId={id}
             Layout={({ currentPatientError, currentPatient, currentPatientLoading }) => (
-              <ListItem button component={Link} to={`/patient/${id}`}>
+              <ListItem button component={Link} to={`/patient/${id}`} className={classes.listItem}>
                 <ListItemAvatar>
                   {currentPatientLoading ? (
                     <DelayComponent wait={100}>
@@ -82,7 +85,7 @@ function HomeComponent({ classes, patientIds }) {
 }
 
 HomeComponent.propTypes = {
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(HomeComponent);
