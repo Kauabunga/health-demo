@@ -1,7 +1,7 @@
-import React, { Component } from "react";
-import { observer } from "mobx-react";
+import React, { Component } from 'react';
+import { observer } from 'mobx-react';
 
-import PatientState from "../state/PatientState";
+import PatientState from '../state/PatientState';
 
 class PatientContainer extends Component {
   static contextType = PatientState;
@@ -22,7 +22,7 @@ class PatientContainer extends Component {
 
     const currentPatient = patients[patientId];
     const currentPatientError = patientError[patientId];
-    const currentPatientLoading = patientLoading[patientId];
+    const currentPatientLoading = patientLoading[patientId] === undefined ? true : patientLoading[patientId];
 
     return (
       <Layout
