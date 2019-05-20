@@ -2,6 +2,9 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
+import Grid from "@material-ui/core/Grid";
+import Card from "@material-ui/core/Card";
+import TextField from "@material-ui/core/TextField";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -26,49 +29,96 @@ const styles = {
   }
 };
 
-function HomeComponent({ classes, patientIds }) {
+function HomeComponent({
+  classes,
+  patientIds,
+  searchNhi,
+  isSearchLoading,
+  currentSearchResult,
+  searchBirthdate,
+  searchPatient
+}) {
+  const handleSubmit = e => {
+    e.preventDefault();
+    searchPatient(searchNhi, searchBirthdate);
+  };
+
+  const handleNhiChange = e => {
+    searchPatient(e.target.value, searchBirthdate);
+  };
+
+  const handleBirthdateChange = e => {
+    searchPatient(searchNhi, e.target.value);
+  };
+
   return (
     <StandardLayout>
-      <Typography variant="h6">Welcome</Typography>
+      <Typography variant="h6" gutterBottom>
+        Welcome
+      </Typography>
+      <form onSubmit={handleSubmit}>
+        <Card style={{ padding: 24 }}>
+          <Typography variant="subtitle1" gutterBottom>
+            Lookup a user
+          </Typography>
+          <Grid container>
+            <TextField id="nhi" name="nhi" type="text" label="Enter NHI" onChange={handleNhiChange} value={searchNhi} />
+            <TextField
+              id="birthdate"
+              name="birthdate"
+              label="Birthday"
+              onChange={handleBirthdateChange}
+              type="date"
+              value={searchBirthdate}
+            />
+
+            <Button style={{ marginLeft: 20 }} variant="outlined" type="submit">
+              {isSearchLoading ? <CircularProgress /> : "Search"}
+            </Button>
+          </Grid>
+        </Card>
+      </form>
 
       <List className={classes.list}>
-        {patientIds.map(id => (
-          <PatientContainer
-            key={id}
-            patientId={id}
-            Layout={({ currentPatientError, currentPatient, currentPatientLoading }) => (
-              <ListItem button component={Link} to={`/patient/${id}`} className={classes.listItem}>
-                <ListItemAvatar>
-                  {currentPatientLoading ? (
-                    <DelayComponent wait={100}>
-                      <CircularProgress />
-                    </DelayComponent>
-                  ) : (
-                    <Avatar alt={currentPatient.name} src={currentPatient.photo} />
+        {currentSearchResult &&
+          !isSearchLoading &&
+          currentSearchResult.patientIds.map(id => (
+            <PatientContainer
+              key={id}
+              patientId={id}
+              Layout={({ currentPatientError, currentPatient, currentPatientLoading }) => (
+                <ListItem button component={Link} to={`/patient/${id}`} className={classes.listItem}>
+                  <ListItemAvatar>
+                    {currentPatientLoading ? (
+                      <DelayComponent wait={100}>
+                        <CircularProgress />
+                      </DelayComponent>
+                    ) : (
+                      <Avatar alt={currentPatient.name} src={currentPatient.photo} />
+                    )}
+                  </ListItemAvatar>
+
+                  {currentPatient && (
+                    <ListItemText
+                      primary={`${currentPatient.name} (${id})`}
+                      secondary={
+                        <React.Fragment>
+                          <Typography component="span" className={classes.inline} color="textPrimary">
+                            {currentPatient.email}
+                          </Typography>
+                          {currentPatient.address}
+                        </React.Fragment>
+                      }
+                    />
                   )}
-                </ListItemAvatar>
 
-                {currentPatient && (
-                  <ListItemText
-                    primary={`${currentPatient.name} (${id})`}
-                    secondary={
-                      <React.Fragment>
-                        <Typography component="span" className={classes.inline} color="textPrimary">
-                          {currentPatient.email}
-                        </Typography>
-                        {currentPatient.address}
-                      </React.Fragment>
-                    }
-                  />
-                )}
-
-                {currentPatientError && (
-                  <pre style={{ color: red[500] }}>{JSON.stringify(currentPatientError, null, 2)}</pre>
-                )}
-              </ListItem>
-            )}
-          />
-        ))}
+                  {currentPatientError && (
+                    <pre style={{ color: red[500] }}>{JSON.stringify(currentPatientError, null, 2)}</pre>
+                  )}
+                </ListItem>
+              )}
+            />
+          ))}
       </List>
 
       <div>

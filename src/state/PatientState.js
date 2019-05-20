@@ -1,6 +1,7 @@
 import React from "react";
-import { decorate, observable, action } from "mobx";
+import { decorate, observable, computed, action } from "mobx";
 import axios from "axios";
+import qs from "qs";
 
 import { credentialsStore } from "./CredentialsState";
 import { authStore } from "./AuthState";
@@ -11,6 +12,64 @@ class PatientState {
   patientLoading = {};
   patientError = {};
   patients = {};
+
+  patientSearchLoading = {};
+  patientSearchError = {};
+  patientSearch = {};
+  currentPatientSearch = null;
+  searchBirthdate = "1931-08-18";
+  searchNhi = "";
+
+  constructor() {
+    this.debounceSearchPatient = debounce(this.debounceSearchPatient.bind(this), 200);
+  }
+
+  get currentSearchResult() {
+    return this.patientSearch[this.currentPatientSearch];
+  }
+
+  get isSearchLoading() {
+    return !!this.patientSearchLoading[this.currentPatientSearch];
+  }
+
+  get isSearchError() {
+    return this.patientSearchError[this.currentPatientSearch];
+  }
+
+  searchPatient = async (id, birthdate) => {
+    const currentPatientSearch = `${id}-${birthdate}`;
+    this.searchNhi = id;
+    this.searchBirthdate = birthdate;
+
+    this.currentPatientSearch = currentPatientSearch;
+    this.patientSearchLoading = { ...this.patientSearchLoading, [currentPatientSearch]: true };
+    this.patientSearchError = { ...this.patientSearchError, [currentPatientSearch]: null };
+
+    this.debounceSearchPatient(id, birthdate);
+  };
+
+  debounceSearchPatient = async (id, birthdate) => {
+    const currentPatientSearch = `${id}-${birthdate}`;
+    try {
+      const patient = await searchPatient(id, birthdate);
+      this.patientSearch = { ...this.patientSearch, [currentPatientSearch]: patient };
+    } catch (error) {
+      console.log("Error searching patient", currentPatientSearch, error);
+      if (this.currentPatientSearch === currentPatientSearch) {
+        this.patientSearchError = {
+          ...this.patientSearchError,
+          [currentPatientSearch]: {
+            message: error.message,
+            error: error
+          }
+        };
+      }
+    }
+
+    if (this.currentPatientSearch === currentPatientSearch) {
+      this.patientSearchLoading = { ...this.patientSearchLoading, [currentPatientSearch]: false };
+    }
+  };
 
   loadPatient = async patientId => {
     this.patientLoading = { ...this.patientLoading, [patientId]: true };
@@ -36,11 +95,23 @@ class PatientState {
 
 const decorated = decorate(PatientState, {
   patientIds: observable,
+
   patientLoading: observable,
   patientError: observable,
   patients: observable,
 
-  loadPatient: action
+  loadPatient: action,
+
+  currentSearchResult: computed,
+  isSearchLoading: computed,
+  isSearchError: computed,
+
+  searchBirthdate: observable,
+  searchNhi: observable,
+  patientSearchLoading: observable,
+  patientSearchError: observable,
+  patientSearch: observable,
+  searchPatient: action
 });
 
 export const patientStore = new decorated();
@@ -52,11 +123,10 @@ async function getPatient(patientId) {
   const { session } = authStore;
   const { id_token } = session || {};
 
-  // const Authorization = `Bearer ${access_token}`;
   const Authorization = `Bearer ${id_token}`;
-
   const url = `${base_uri}${base_path_patient}/${patientId}`;
   // const proxyUrl = `https://ryman-healthcare-demo-api.busy-bee.now.sh/${url}`;
+
   try {
     const { status, data } = await axios.get(url, {
       headers: {
@@ -73,12 +143,47 @@ async function getPatient(patientId) {
     return transformPatient(data);
   } catch (error) {
     console.error("Error getting patient", patientId, error);
+    await wait(getRandomInt(400, 2500));
     return transformPatient(getDummyPatient());
   }
 }
 
+async function searchPatient(id, birthdate) {
+  const { client_id, base_uri, base_path_patient } = credentialsStore;
+  const { session } = authStore;
+  const { id_token } = session || {};
+
+  if (!id || !birthdate) {
+    return null;
+  }
+
+  const params = { identifier: "http://health.govt.nz", nhi: id, birthdate, _format: "json" };
+  const Authorization = `Bearer ${id_token}`;
+  const url = `${base_uri}${base_path_patient}/_search?${qs.stringify(params)}`;
+
+  try {
+    const { status, data } = await axios.get(url, {
+      headers: {
+        Accept: "application/json",
+        Authorization,
+        apikey: client_id
+      }
+    });
+
+    if (status !== 200) {
+      throw new Error(`Invalid status ${status}`);
+    }
+
+    return transformPatientSearch(data);
+  } catch (error) {
+    console.error("Error searching patient", id, birthdate, error);
+    await wait(getRandomInt(400, 2500));
+    return transformPatientSearch(getDummySearchResult());
+  }
+}
+
 function transformPatient(patient) {
-  const { photo: photos, name, address, telecom, birthDate } = patient || {};
+  const { photo: photos, name, gender, address, telecom, birthDate } = patient || {};
   const [firstPhoto] = photos || [];
   const { data: firstPhotoData } = firstPhoto || {};
   const photo = `data:image/png;base64,${firstPhotoData}`;
@@ -102,8 +207,73 @@ function transformPatient(patient) {
     address: prettyAddress,
     birthDate,
     photo,
+    gender,
 
     __original__: patient
+  };
+}
+
+function transformPatientSearch(patientSearch) {
+  const { entry, total } = patientSearch;
+  const patientIds = entry.map(({ resource }) => resource && resource.id).filter(id => !!id);
+
+  return {
+    patientIds,
+    total
+  };
+}
+
+function getDummySearchResult() {
+  return {
+    resourceType: "Bundle",
+    type: "searchset",
+    total: 1,
+    link: [
+      {
+        relation: "self",
+        url:
+          "https://apac-syd-partner02-test.apigee.net/rymanfhir/fhir/Patient?identifier=http://health.govt.nz/nhi%7CZGL5346&birthdate=1931-08-18"
+      }
+    ],
+    entry: [
+      {
+        fullUrl: "https://apac-syd-partner02-test.apigee.net/rymanfhir/fhir/Patient/2143.19",
+        resource: {
+          resourceType: "Patient",
+          id: "2143.19",
+          identifier: [
+            {
+              use: "official",
+              system: "http://health.govt.nz/nhi",
+              value: "ZGL5346"
+            },
+            {
+              use: "secondary",
+              system: "http://rymanhealthcare.co.nz",
+              value: "2143.19"
+            }
+          ],
+          name: [
+            {
+              use: "official",
+              family: "Foster",
+              given: ["Willow"],
+              prefix: ["Mr"]
+            },
+            {
+              use: "usual",
+              given: ["Willow"]
+            }
+          ],
+          gender: "unknown",
+          birthDate: "1931-08-18"
+        },
+
+        search: {
+          mode: "match"
+        }
+      }
+    ]
   };
 }
 
@@ -198,4 +368,30 @@ function getDummyPatient() {
       }
     ]
   };
+}
+
+function debounce(func, wait, immediate) {
+  var timeout;
+  return function() {
+    var context = this,
+      args = arguments;
+    var later = function() {
+      timeout = null;
+      if (!immediate) func.apply(context, args);
+    };
+    var callNow = immediate && !timeout;
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+    if (callNow) func.apply(context, args);
+  };
+}
+
+async function wait(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms || 500));
+}
+
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }

@@ -8,10 +8,25 @@ class HomeContainer extends Component {
 
   render() {
     const { Layout } = this.props;
+    const {
+      patientIds,
+      searchPatient,
+      isSearchLoading,
+      currentSearchResult,
+      searchNhi,
+      searchBirthdate
+    } = this.context;
 
-    const { patientIds } = this.context;
-
-    return <Layout patientIds={patientIds} />;
+    return (
+      <Layout
+        patientIds={patientIds}
+        searchNhi={searchNhi}
+        currentSearchResult={currentSearchResult}
+        isSearchLoading={isSearchLoading}
+        searchBirthdate={searchBirthdate}
+        searchPatient={searchPatient}
+      />
+    );
   }
 }
 
