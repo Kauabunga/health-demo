@@ -157,7 +157,7 @@ async function searchPatient(id, birthdate) {
     return null;
   }
 
-  const params = { identifier: "http://health.govt.nz", nhi: id, birthdate, _format: "json" };
+  const params = { identifier: `http://health.govt.nz/nhi|${id}`, birthdate, _format: "json" };
   const Authorization = `Bearer ${id_token}`;
   const url = `${base_uri}${base_path_patient}/_search?${qs.stringify(params)}`;
 
@@ -214,8 +214,10 @@ function transformPatient(patient) {
 }
 
 function transformPatientSearch(patientSearch) {
-  const { entry, total } = patientSearch;
-  const patientIds = entry.map(({ resource }) => resource && resource.id).filter(id => !!id);
+  const { entry, total } = patientSearch || {};
+
+  console.log("transformPatientSearch", total);
+  const patientIds = (entry || []).map(({ resource }) => resource && resource.id).filter(id => !!id);
 
   return {
     patientIds,
