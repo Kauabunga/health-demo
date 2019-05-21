@@ -18,10 +18,12 @@ class ConfigContainer extends Component {
       base_uri,
       base_path_oauth,
       base_path_patient,
+      base_path_observation,
 
       handleBaseUriChange,
       handleBasePathOAuthChange,
       handleBasePathPatientChange,
+      handleBasePathObservationChange,
 
       handleClientIdChange,
       handleClientSecretChange
@@ -35,6 +37,12 @@ class ConfigContainer extends Component {
         key: "base_path_patient",
         onChange: handleBasePathPatientChange,
         value: base_path_patient
+      },
+      {
+        label: "Base Observation Path",
+        key: "base_path_observation",
+        onChange: handleBasePathObservationChange,
+        value: base_path_observation
       },
       { label: "Client Id", key: "client_id", onChange: handleClientIdChange, value: client_id },
       { label: "Client Secret", key: "client_secret", onChange: handleClientSecretChange, value: client_secret }
