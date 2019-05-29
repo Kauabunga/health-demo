@@ -174,6 +174,11 @@ async function searchPatient(id, birthdate) {
       throw new Error(`Invalid status ${status}`);
     }
 
+    const { issue, error } = data || {};
+    if (issue || error) {
+      return transformPatientSearch(getDummySearchResult());
+    }
+
     return transformPatientSearch(data);
   } catch (error) {
     console.error("Error searching patient", id, birthdate, error);
@@ -197,6 +202,7 @@ function transformPatient(patient) {
   const prettyAddress =
     line &&
     line
+      .filter(l => !!l)
       .join(", ")
       .replace(/^,/gi, "")
       .trim();
@@ -216,7 +222,6 @@ function transformPatient(patient) {
 function transformPatientSearch(patientSearch) {
   const { entry, total } = patientSearch || {};
 
-  console.log("transformPatientSearch", total);
   const patientIds = (entry || []).map(({ resource }) => resource && resource.id).filter(id => !!id);
 
   return {

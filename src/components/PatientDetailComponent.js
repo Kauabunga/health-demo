@@ -26,8 +26,8 @@ const styles = {
 const DetailItem = ({ label, value }) => (
   <Grid item>
     <Typography>{label}</Typography>
-    <Typography variant="subtitle1" style={{ fontWeight: 700 }}>
-      {value}
+    <Typography variant="subtitle1" style={{ fontWeight: 700 }} noWrap>
+      {value || "unknown"}
     </Typography>
   </Grid>
 );
@@ -43,6 +43,8 @@ const DetailPatient = ({ currentPatient }) => (
     <DetailItem label="Birth date" value={currentPatient.birthDate} />
     <Divider style={{ marginTop: 12, marginBottom: 12 }} />
     <DetailItem label="Gender" value={currentPatient.gender} />
+    <Divider style={{ marginTop: 12, marginBottom: 12 }} />
+    <DetailItem label="Next of kin" value={currentPatient.nextOfKin} />
   </Grid>
 );
 

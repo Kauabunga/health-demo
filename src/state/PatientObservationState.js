@@ -5,6 +5,7 @@ import qs from "qs";
 
 import { credentialsStore } from "./CredentialsState";
 import { authStore } from "./AuthState";
+import { addDays } from "date-fns";
 
 class PatientObservationState {
   patientObservationLoading = {};
@@ -12,7 +13,7 @@ class PatientObservationState {
   patientObservations = {};
 
   start = new Date().toISOString();
-  end = new Date().toISOString();
+  end = addDays(new Date(), 7).toISOString();
 
   loadPatientObservation = async (patientId, start, end) => {
     console.log("loadPatientObservation", { patientId, start, end });

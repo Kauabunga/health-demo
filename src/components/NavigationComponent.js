@@ -26,7 +26,7 @@ function NavigationComponent(props) {
       <AppBar position="static" style={{ boxShadow: "none" }}>
         <Toolbar>
           <Typography component={Link} to="/" variant="h6" color="inherit" style={{ textDecoration: "none" }}>
-            Ryman Healthcare Demo
+            PMS DEMO
           </Typography>
 
           <div className={classes.grow} />
