@@ -52,7 +52,7 @@ function PatientObservationComponent(props) {
   // };
 
   return (
-    <StandardLayout>
+    <StandardLayout style={{ minHeight: 500 }}>
       <br />
       <Typography variant="h6" gutterBottom>
         Observations

@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Grid from "@material-ui/core/Grid";
+import Avatar from "@material-ui/core/Avatar";
 import Card from "@material-ui/core/Card";
 import Divider from "@material-ui/core/Divider";
 import Button from "@material-ui/core/Button";
@@ -44,7 +45,9 @@ const DetailPatient = ({ currentPatient }) => (
     <Divider style={{ marginTop: 12, marginBottom: 12 }} />
     <DetailItem label="Gender" value={currentPatient.gender} />
     <Divider style={{ marginTop: 12, marginBottom: 12 }} />
-    <DetailItem label="Next of kin" value={currentPatient.nextOfKin} />
+    <DetailItem label="Next of kin name" value={currentPatient.nextOfKin.name} />
+    <Divider style={{ marginTop: 12, marginBottom: 12 }} />
+    <DetailItem label="Next of kin contact" value={currentPatient.nextOfKin.phone || currentPatient.nextOfKin.email} />
   </Grid>
 );
 
@@ -88,9 +91,14 @@ function PatientDetailComponent(props) {
 
   return (
     <StandardLayout>
-      <Typography variant="h6" gutterBottom>
-        Patient {patientId}
-      </Typography>
+      <Grid container direction="row" alignItems="center" style={{ marginBottom: 12 }}>
+        {(currentPatient.photo && <Avatar alt={currentPatient.name} src={currentPatient.photo} />) || (
+          <Avatar>{currentPatient.initials}</Avatar>
+        )}
+        <Typography variant="h6" style={{ marginLeft: 8 }}>
+          Patient {patientId}
+        </Typography>
+      </Grid>
 
       {currentPatient && (
         <Card style={{ padding: 24 }}>

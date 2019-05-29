@@ -57,7 +57,7 @@ function HomeComponent({
         Welcome
       </Typography>
       <form onSubmit={handleSubmit}>
-        <Card style={{ padding: 24 }}>
+        <Card style={{ padding: 24, minHeight: 100 }}>
           <Typography variant="subtitle1" gutterBottom>
             Lookup a user
           </Typography>
@@ -94,7 +94,9 @@ function HomeComponent({
                         <CircularProgress />
                       </DelayComponent>
                     ) : (
-                      <Avatar alt={currentPatient.name} src={currentPatient.photo} />
+                      (currentPatient.photo && <Avatar alt={currentPatient.name} src={currentPatient.photo} />) || (
+                        <Avatar>{currentPatient.initials}</Avatar>
+                      )
                     )}
                   </ListItemAvatar>
 

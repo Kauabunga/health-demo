@@ -11,9 +11,9 @@ const styles = {
   }
 };
 
-function StandardLayout({ classes, children }) {
+function StandardLayout({ classes, style, children }) {
   return (
-    <Grid container direction="column" className={classes.root}>
+    <Grid container direction="column" className={classes.root} style={style}>
       {children}
     </Grid>
   );
