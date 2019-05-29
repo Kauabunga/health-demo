@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
@@ -51,21 +51,38 @@ const DetailPatient = ({ currentPatient }) => (
   </Grid>
 );
 
-const DetailNotes = ({ notes }) => {
+const DetailNotes = () => {
   const handleNoteSubmit = e => e.preventDefault();
+
+  const [currentNote, updateCurrentNote] = useState("");
+  const [notes, updateNotes] = useState([]);
+
+  const handleNoteChange = e => updateCurrentNote(e.target.value);
+  const handleAddNote = () => {
+    updateCurrentNote("");
+    updateNotes([...notes, currentNote]);
+  };
 
   return (
     <Grid item style={{ flexGrow: 1, maxWidth: 400 }}>
       <Grid container direction="column">
         {notes &&
           notes.map(currentNote => (
-            <Card key={currentNote.message}>
-              <Typography>{currentNote.message || ""}</Typography>
+            <Card key={currentNote} style={{ marginBottom: 12, padding: 12 }}>
+              <Typography>{currentNote || ""}</Typography>
             </Card>
           ))}
         <form onSubmit={handleNoteSubmit}>
-          <TextField variant="outlined" label="Enter a note for the patient" multiline type="textarea" fullWidth />
-          <Button style={{ marginTop: 12 }} variant="outlined">
+          <TextField
+            value={currentNote}
+            onChange={handleNoteChange}
+            variant="outlined"
+            label="Enter a note for the patient"
+            multiline
+            type="textarea"
+            fullWidth
+          />
+          <Button style={{ marginTop: 12 }} variant="outlined" onClick={handleAddNote}>
             Add note
           </Button>
         </form>
