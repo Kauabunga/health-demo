@@ -25,8 +25,8 @@ class CredentialsState {
 
   base_uri = store.get("base_uri") || "https://apac-syd-partner02-test.apigee.net";
   base_path_oauth = store.get("base_path_oauth") || "/ryman-oauth/token";
-  base_path_patient = store.get("base_path_patient") || "/rymanfhir/fhir/Patient";
-  base_path_observation = store.get("base_path_observation") || "/rymanfhir/fhir/Observation";
+  base_path_patient = store.get("base_path_patient") || "/fhir-4-0-1/Patient";
+  base_path_observation = store.get("base_path_observation") || "/fhir-4-0-1/Observation";
 
   handleBaseUriChange = handleChange("base_uri").bind(this);
   handleBasePathOAuthChange = handleChange("base_path_oauth").bind(this);

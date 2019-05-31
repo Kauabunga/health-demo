@@ -14,6 +14,7 @@ import { red } from "@material-ui/core/colors";
 
 import StandardLayout from "../layout/StandardLayout";
 import DelayComponent from "./DelayComponent";
+import PatientConditionContainer from "../containers/PatientConditionContainer";
 
 const styles = {
   root: {
@@ -58,27 +59,27 @@ const DetailPatient = ({ currentPatient }) => (
   </Grid>
 );
 
-const DetailNotes = () => {
+const DetailNotes = ({ notes: defaultNotes }) => {
   const handleNoteSubmit = e => e.preventDefault();
 
   const [currentNote, updateCurrentNote] = useState("");
-  const [notes, updateNotes] = useState([]);
+  const [notes, updateNotes] = useState(defaultNotes || []);
 
   const handleNoteChange = e => updateCurrentNote(e.target.value);
   const handleAddNote = () => {
     updateCurrentNote("");
-    updateNotes([...notes, currentNote]);
+    updateNotes([...notes, { text: currentNote }]);
   };
 
   return (
-    <Grid item style={{ flexGrow: 1, maxWidth: 400 }}>
+    <Grid item style={{ flexGrow: 1, maxWidth: 380 }}>
       <Grid container direction="column">
-        {notes &&
-          notes.map(currentNote => (
-            <Card key={currentNote} style={{ marginBottom: 12, padding: 12 }}>
-              <Typography>{currentNote || ""}</Typography>
-            </Card>
-          ))}
+        {(notes || []).map(({ id, text }) => (
+          <Card key={id || text} style={{ marginBottom: 12, padding: 12 }}>
+            <Typography>{text || "asdf"}</Typography>
+          </Card>
+        ))}
+
         <form onSubmit={handleNoteSubmit}>
           <TextField
             value={currentNote}
@@ -111,8 +112,6 @@ function PatientDetailComponent(props) {
     );
   }
 
-  const notes = [{ message: "" }];
-
   return (
     <StandardLayout>
       {currentPatient && (
@@ -131,7 +130,14 @@ function PatientDetailComponent(props) {
           <Grid container>
             <DetailPatient currentPatient={currentPatient} />
 
-            <DetailNotes notes={notes} />
+            <PatientConditionContainer
+              patientId={patientId}
+              Layout={({ currentPatientCondition }) => {
+                const { notes } = currentPatientCondition || {};
+
+                return (currentPatientCondition && <DetailNotes notes={notes} />) || <CircularProgress />;
+              }}
+            />
           </Grid>
         </Card>
       )}

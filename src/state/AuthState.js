@@ -32,13 +32,16 @@ class AuthState {
     this.errorMessage = null;
 
     const { base_path_oauth, base_uri, client_id, client_secret } = credentialsStore;
+    const payload = { grant_type: "client_credentials", client_id, client_secret };
     try {
       const { status, data } = await axios.post(
         `${base_uri}${base_path_oauth}`,
-        qs.stringify({ grant_type: "client_credentials", client_id, client_secret }),
+        qs.stringify(payload),
+        // payload,
         {
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
+            // "Content-Type": "application/json",
             Accept: "application/json"
           }
         }
