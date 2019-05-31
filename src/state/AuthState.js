@@ -2,7 +2,7 @@ import React from "react";
 import { decorate, observable, action } from "mobx";
 import store from "store";
 import axios from "axios";
-import qs from "qs";
+// import qs from "qs";
 
 import { credentialsStore } from "./CredentialsState";
 
@@ -32,16 +32,25 @@ class AuthState {
     this.errorMessage = null;
 
     const { base_path_oauth, base_uri, client_id, client_secret } = credentialsStore;
-    const payload = { grant_type: "client_credentials", client_id, client_secret };
+    const payload = {
+      grant_type: "client_credentials",
+      client_id,
+      client_secret,
+      identityContext: {
+        pmsId: "drjohn@somepractice.com",
+        practice: "Some Practice"
+      }
+    };
+
     try {
       const { status, data } = await axios.post(
         `${base_uri}${base_path_oauth}`,
-        qs.stringify(payload),
-        // payload,
+        // qs.stringify(payload),
+        payload,
         {
           headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-            // "Content-Type": "application/json",
+            // "Content-Type": "application/x-www-form-urlencoded",
+            "Content-Type": "application/json",
             Accept: "application/json"
           }
         }
