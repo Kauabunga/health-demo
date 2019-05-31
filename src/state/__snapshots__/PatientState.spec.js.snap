@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Should get the next of kin 1`] = `
+Object {
+  "address": "D021, Dementia, Ada Lovelace, OTHER",
+  "birthDate": "1916-02-02",
+  "carePlan": "Dementia - Respite",
+  "email": "Kloe.Roberson@residents.AdaLovelace.testvillages.rymanhealthcare.com",
+  "ethnicity": "NZ European",
+  "gender": "unknown",
+  "initials": "KR",
+  "maritalStatus": "Widowed",
+  "name": "Kloe Roberson",
+  "nextOfKin": Object {
+    "email": "Charles.Mcfadden@nok.AdaLovelace.testvillages.rymanhealthcare.com",
+    "name": "Charles Mcfadden",
+    "phone": undefined,
+  },
+  "photo": "",
+}
+`;

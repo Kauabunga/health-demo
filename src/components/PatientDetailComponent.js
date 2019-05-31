@@ -48,6 +48,13 @@ const DetailPatient = ({ currentPatient }) => (
     <DetailItem label="Next of kin name" value={currentPatient.nextOfKin.name} />
     <Divider style={{ marginTop: 12, marginBottom: 12 }} />
     <DetailItem label="Next of kin contact" value={currentPatient.nextOfKin.phone || currentPatient.nextOfKin.email} />
+    <Divider style={{ marginTop: 12, marginBottom: 12 }} />
+    <DetailItem label="Marital status" value={currentPatient.maritalStatus} />
+    <Divider style={{ marginTop: 12, marginBottom: 12 }} />
+    <DetailItem label="Ethnicity" value={currentPatient.ethnicity} />
+    <Divider style={{ marginTop: 12, marginBottom: 12 }} />
+    <DetailItem label="Care plan" value={currentPatient.carePlan} />
+    <Divider style={{ marginTop: 12, marginBottom: 12 }} />
   </Grid>
 );
 
@@ -108,14 +115,16 @@ function PatientDetailComponent(props) {
 
   return (
     <StandardLayout>
-      <Grid container direction="row" alignItems="center" style={{ marginBottom: 12 }}>
-        {(currentPatient.photo && <Avatar alt={currentPatient.name} src={currentPatient.photo} />) || (
-          <Avatar>{currentPatient.initials}</Avatar>
-        )}
-        <Typography variant="h6" style={{ marginLeft: 8 }}>
-          Patient {patientId}
-        </Typography>
-      </Grid>
+      {currentPatient && (
+        <Grid container direction="row" alignItems="center" style={{ marginBottom: 12 }}>
+          {(currentPatient && currentPatient.photo && (
+            <Avatar alt={currentPatient.name} src={currentPatient.photo} />
+          )) || <Avatar>{currentPatient.initials}</Avatar>}
+          <Typography variant="h6" style={{ marginLeft: 8 }}>
+            Patient {patientId}
+          </Typography>
+        </Grid>
+      )}
 
       {currentPatient && (
         <Card style={{ padding: 24 }}>

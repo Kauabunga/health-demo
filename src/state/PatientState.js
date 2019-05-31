@@ -188,7 +188,7 @@ async function searchPatient(id, birthdate) {
 }
 
 export function transformPatient(patient) {
-  const { photo: photos, name, gender, address, contact, telecom, birthDate } = patient || {};
+  const { photo: photos, extension, name, gender, address, contact, telecom, birthDate } = patient || {};
 
   // PHOTO
   const [firstPhoto] = photos || [];
@@ -233,6 +233,15 @@ export function transformPatient(patient) {
     email: nextOfKinEmail && nextOfKinEmail.value
   };
 
+  // EXTENSIONS
+  const carePlanExtension = extension.find(({ valueCoding }) => valueCoding && valueCoding.code === "R-D1");
+  const carePlan = carePlanExtension && carePlanExtension.valueCoding.display;
+  const ethnicityExtension = extension.find(({ valueCoding }) => valueCoding && valueCoding.code === "11");
+  const ethnicity = ethnicityExtension && ethnicityExtension.valueCoding.display;
+
+  // MARITAL STATUS
+  const maritalStatus = patient.maritalStatus && patient.maritalStatus.text;
+
   // RESULT
   return {
     name: fullOfficialName,
@@ -242,6 +251,10 @@ export function transformPatient(patient) {
     birthDate,
     photo,
     gender,
+
+    carePlan,
+    maritalStatus,
+    ethnicity,
 
     nextOfKin,
 
@@ -319,13 +332,31 @@ export function getDummyPatient() {
     resourceType: "Patient",
     id: "2143.19",
     meta: {
-      versionId: "8"
+      versionId: "6"
     },
+    extension: [
+      {
+        url: "http://apac-syd-partner02-test.apigee.net/fhir4-0-0/Extensions/Patient/CareLevel",
+        valueCoding: {
+          system: "http://rymanhealthcare.co.nz",
+          code: "R-D1",
+          display: "Dementia - Respite"
+        }
+      },
+      {
+        url: "http://apac-syd-partner02-test.apigee.net/fhir4-0-0/Extensions/Patient/Ethnicities",
+        valueCoding: {
+          system: "http://rymanhealthcare.co.nz",
+          code: "11",
+          display: "NZ European"
+        }
+      }
+    ],
     identifier: [
       {
         use: "official",
         system: "http://health.govt.nz/nhi",
-        value: "ZGL5346"
+        value: "ZBP8438"
       },
       {
         use: "secondary",
@@ -336,55 +367,85 @@ export function getDummyPatient() {
     name: [
       {
         use: "official",
-        family: "Foster",
-        given: ["Willow"]
+        family: "Roberson",
+        given: ["Kloe"],
+        prefix: ["Mrs"]
       },
       {
         use: "usual",
-        given: ["Willow"]
+        given: ["Kloe"]
       }
     ],
     telecom: [
       {
         system: "email",
-        value: "Willow.Foster@residents.AdaLovelace.testvillages.rymanhealthcare.com",
+        value: "Kloe.Roberson@residents.AdaLovelace.testvillages.rymanhealthcare.com",
         use: "home",
         period: {
-          start: "2011-06-08T00:00:00+00:00",
+          start: "2018-04-04T00:00:00+00:00",
           end: "1900-01-01T00:00:00+00:00"
         }
       },
       {
         system: "phone",
-        value: "tel:-1-686680",
+        value: "tel:-1-3334293",
         use: "home",
         period: {
-          start: "2019-05-06T00:00:00+00:00",
+          start: "2018-04-04T00:00:00+00:00",
+          end: "1900-01-01T00:00:00+00:00"
+        }
+      },
+      {
+        system: "phone",
+        value: 'tel:-5-246433;ext="',
+        use: "home",
+        period: {
+          start: "2018-04-04T00:00:00+00:00",
           end: "1900-01-01T00:00:00+00:00"
         }
       }
     ],
     gender: "unknown",
-    birthDate: "1931-08-18",
+    birthDate: "1916-02-02",
     address: [
       {
         use: "home",
         type: "physical",
-        text: "D003,Dementia,Ada Lovelace,OTHER",
-        line: ["D003", "Dementia", "Ada Lovelace", "", "", "", "", "", "OTHER"],
+        text: "D021,Dementia,Ada Lovelace,OTHER",
+        line: ["D021", "Dementia", "Ada Lovelace", "", "", "", "", "", "OTHER"],
         city: "",
         postalCode: "",
         country: "OTHER",
         period: {
-          start: "2019-05-06T00:00:00+00:00",
+          start: "2018-04-04T00:00:00+00:00",
           end: "1900-01-01T00:00:00+00:00"
         }
       }
     ],
+    maritalStatus: {
+      coding: [
+        {
+          system: "http://terminology.hl7.org/CodeSystem/v3-MaritalStatus",
+          code: "W",
+          display: "Widowed"
+        }
+      ],
+      text: "Widowed"
+    },
     photo: [
       {
+        contentType: "image/jpeg",
         data: "",
-        hash: "2jmj7l5rSw0yVb/vlWAYkK/YBwk="
+        size: 0,
+        hash: "2jmj7l5rSw0yVb/vlWAYkK/YBwk=",
+        title: "Small picture"
+      },
+      {
+        contentType: "image/jpeg",
+        data: "",
+        size: 0,
+        hash: "2jmj7l5rSw0yVb/vlWAYkK/YBwk=",
+        title: "Large picture"
       }
     ],
     contact: [
@@ -403,25 +464,25 @@ export function getDummyPatient() {
         ],
         name: {
           use: "official",
-          family: "Foster",
-          given: ["Kane"]
+          family: "Mcfadden",
+          given: ["Charles"]
         },
         telecom: [
           {
             system: "email",
-            value: "kane.foster@nok.adalovelace.testvillages.rymanhealthcare.com",
+            value: "Charles.Mcfadden@nok.AdaLovelace.testvillages.rymanhealthcare.com",
             use: "home",
             period: {
-              start: "2019-05-07T00:00:00+00:00",
+              start: "2019-05-27T00:00:00+00:00",
               end: "1900-01-01T00:00:00+00:00"
             }
           },
           {
-            system: "phone",
-            value: "tel:+64-55-51234567",
+            system: "other",
+            value: "PHYSICAL",
             use: "home",
             period: {
-              start: "2019-05-07T00:00:00+00:00",
+              start: "2019-05-27T00:00:00+00:00",
               end: "1900-01-01T00:00:00+00:00"
             }
           }
@@ -435,37 +496,104 @@ export function getDummyPatient() {
       {
         relationship: [
           {
-            coding: [
-              {
-                system: "http://hl7.org/fhir/ValueSet/relatedperson-relationshiptype",
-                code: "DPOWATT",
-                display: "durable power of attorney"
-              }
-            ],
-            text: "Activated Enduring Power of Attorney"
+            text: "Pending Enduring Power of Attorney"
           }
         ],
         name: {
           use: "official",
-          family: "Foster",
-          given: ["Kane"]
+          family: "Mcfadden",
+          given: ["Charles"]
         },
         telecom: [
           {
             system: "email",
-            value: "kane.foster@nok.adalovelace.testvillages.rymanhealthcare.com",
+            value: "Charles.Mcfadden@nok.AdaLovelace.testvillages.rymanhealthcare.com",
             use: "home",
             period: {
-              start: "2019-05-07T00:00:00+00:00",
+              start: "2019-05-27T00:00:00+00:00",
               end: "1900-01-01T00:00:00+00:00"
             }
           },
           {
-            system: "phone",
-            value: "tel:+64-55-51234567",
+            system: "other",
+            value: "PHYSICAL",
             use: "home",
             period: {
-              start: "2019-05-07T00:00:00+00:00",
+              start: "2019-05-27T00:00:00+00:00",
+              end: "1900-01-01T00:00:00+00:00"
+            }
+          }
+        ],
+        gender: "male",
+        period: {
+          start: "2000-01-01T00:00:00+00:00",
+          end: "1900-01-01T00:00:00+00:00"
+        }
+      },
+      {
+        relationship: [
+          {
+            text: "EPOA Active - Personal Care & Welfare"
+          }
+        ],
+        name: {
+          use: "official",
+          family: "Marshall",
+          given: ["Willow"]
+        },
+        telecom: [
+          {
+            system: "email",
+            value: "Willow.Marshall@nok.AdaLovelace.testvillages.rymanhealthcare.com",
+            use: "home",
+            period: {
+              start: "2019-05-27T00:00:00+00:00",
+              end: "1900-01-01T00:00:00+00:00"
+            }
+          },
+          {
+            system: "other",
+            value: "PHYSICAL",
+            use: "home",
+            period: {
+              start: "2019-05-27T00:00:00+00:00",
+              end: "1900-01-01T00:00:00+00:00"
+            }
+          }
+        ],
+        gender: "male",
+        period: {
+          start: "2000-01-01T00:00:00+00:00",
+          end: "1900-01-01T00:00:00+00:00"
+        }
+      },
+      {
+        relationship: [
+          {
+            text: "Pending Enduring Power of Attorney"
+          }
+        ],
+        name: {
+          use: "official",
+          family: "Gill",
+          given: ["Mohsin"]
+        },
+        telecom: [
+          {
+            system: "email",
+            value: "Mohsin.Gill@nok.AdaLovelace.testvillages.rymanhealthcare.com",
+            use: "home",
+            period: {
+              start: "2019-05-27T00:00:00+00:00",
+              end: "1900-01-01T00:00:00+00:00"
+            }
+          },
+          {
+            system: "other",
+            value: "PHYSICAL",
+            use: "home",
+            period: {
+              start: "2019-05-27T00:00:00+00:00",
               end: "1900-01-01T00:00:00+00:00"
             }
           }
@@ -477,9 +605,23 @@ export function getDummyPatient() {
         }
       }
     ],
+    communication: [
+      {
+        language: {
+          coding: [
+            {
+              system: "http://rymanhealthcare.co.nz",
+              code: "eng",
+              display: "English"
+            }
+          ],
+          text: "English"
+        }
+      }
+    ],
     generalPractitioner: [
       {
-        reference: "http://apac-syd-partner02-test.apigee.net/rymanfhir/fhir/Practitioner/2219.2",
+        reference: "http://apac-syd-partner02-test.apigee.net/fhir4-0-0/Practitioner/2219.2",
         type: "Practitioner",
         display: "Arnold Leith"
       }
