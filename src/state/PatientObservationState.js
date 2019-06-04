@@ -13,7 +13,7 @@ class PatientObservationState {
   patientObservations = {};
 
   start = new Date().toISOString();
-  end = addDays(new Date(), 7).toISOString();
+  end = addDays(new Date(), 1).toISOString();
 
   loadPatientObservation = async (patientId, start, end) => {
     console.log("loadPatientObservation", { patientId, start, end });
@@ -61,7 +61,7 @@ export const patientObservationStore = new decorated();
 export default React.createContext(patientObservationStore);
 
 async function getPatientObservation(patientId, start, end) {
-  const { client_id, base_uri, base_path_observation } = credentialsStore;
+  const { client_id, base_uri, base_path_observation, errorsObservation } = credentialsStore;
   const { session } = authStore;
   const { id_token } = session || {};
 
@@ -88,6 +88,12 @@ async function getPatientObservation(patientId, start, end) {
     return transformPatientObservation(data);
   } catch (error) {
     console.error("Error getting observation", patientId, error);
+
+    // If errors are enabled
+    if (errorsObservation) {
+      throw new Error("You arn't authorized to view this range");
+    }
+
     await wait(getRandomInt(2500, 3000));
     return transformPatientObservation(getDummyPatientObservation());
   }

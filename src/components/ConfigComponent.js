@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import Card from "@material-ui/core/Card";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import StandardLayout from "../layout/StandardLayout";
@@ -20,9 +22,24 @@ class ConfigComponent extends Component {
             <Typography variant="h5">Config</Typography>
 
             <Grid container direction="column">
-              {fields.map(field => (
-                <TextField id={field.key} {...field} margin="normal" />
-              ))}
+              {fields.map(field => {
+                switch (field.type) {
+                  case "checkbox":
+                    return (
+                      <FormControlLabel
+                        id={field.key}
+                        key={field.key}
+                        control={<Checkbox {...field} />}
+                        label={field.label}
+                      />
+                    );
+
+                  case "input":
+                  case "text":
+                  default:
+                    return <TextField id={field.key} {...field} margin="normal" />;
+                }
+              })}
             </Grid>
           </Card>
 

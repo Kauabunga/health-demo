@@ -19,6 +19,14 @@ if (client_id || client_secret) {
   removeHash();
 }
 
+function getBooleanStore(key, defaultValue) {
+  const val = store.get(key);
+  if (typeof val !== "undefined") {
+    return val;
+  }
+  return defaultValue;
+}
+
 class CredentialsState {
   client_id = store.get("client_id") || "";
   client_secret = store.get("client_secret") || "";
@@ -35,10 +43,19 @@ class CredentialsState {
 
   handleClientIdChange = handleChange("client_id").bind(this);
   handleClientSecretChange = handleChange("client_secret").bind(this);
+
+  errorsObservation = getBooleanStore("errorsObservation", true);
+  handleErrorsObservationChange = handleChange("errorsObservation").bind(this);
 }
 
 function handleChange(key) {
   return function(event) {
+    if (typeof event.target.checked !== "undefined") {
+      store.set(key, event.target.checked);
+      this[key] = event.target.checked;
+      return;
+    }
+
     store.set(key, event.target.value);
     this[key] = event.target.value;
   };
@@ -57,7 +74,10 @@ const decorated = decorate(CredentialsState, {
   handleBaseUriChange: action,
   handleBasePathOAuthChange: action,
   handleBasePathPatientChange: action,
-  handleBasePathObservationChange: action
+  handleBasePathObservationChange: action,
+
+  errorsObservation: observable,
+  handleErrorsObservationChange: action
 });
 
 export const credentialsStore = new decorated();

@@ -30,7 +30,8 @@ function PatientObservationComponent(props) {
     end,
     loadPatientObservation,
     currentPatientObservation,
-    currentPatientObservationLoading
+    currentPatientObservationLoading,
+    currentPatientObservationError
   } = props;
 
   if (!currentPatientObservation) {
@@ -42,14 +43,21 @@ function PatientObservationComponent(props) {
   const today = new Date().toISOString();
   const handleStartChange = date => loadPatientObservation(patientId, date.toISOString(), end);
   const handleEndChange = date => loadPatientObservation(patientId, start, date.toISOString());
-  const handleLastWeek = () => loadPatientObservation(patientId, subDays(new Date(), 7).toISOString(), today);
-  const handleThisWeek = () => loadPatientObservation(patientId, today, addDays(new Date(), 7).toISOString());
-  const handleNextWeek = () =>
-    loadPatientObservation(patientId, addDays(new Date(), 7).toISOString(), addDays(new Date(), 14).toISOString());
+  const handleYesterday = () => loadPatientObservation(patientId, subDays(new Date(), 1).toISOString(), today);
+  const handleToday = () => loadPatientObservation(patientId, today, addDays(new Date(), 1).toISOString());
 
   // const createSortHandler = property => event => {
   //   onRequestSort(event, property);
   // };
+
+  const showTable =
+    !currentPatientObservationLoading &&
+    currentPatientObservation &&
+    !currentPatientObservationError &&
+    rows &&
+    !!rows.length;
+
+  const noItems = !currentPatientObservationError && !currentPatientObservationLoading && rows && !rows.length;
 
   return (
     <StandardLayout style={{ minHeight: 500 }}>
@@ -59,12 +67,17 @@ function PatientObservationComponent(props) {
       </Typography>
 
       <Grid container>
-        <DatePicker label="Start" value={start} onChange={handleStartChange} />
-        <DatePicker label="End" value={end} onChange={handleEndChange} />
-        <Button onClick={handleLastWeek}>Last week</Button>
-        <Button onClick={handleThisWeek}>This week</Button>
-        <Button onClick={handleNextWeek}>Next week</Button>
+        <DatePicker autoOk label="Start" value={start} onChange={handleStartChange} />
+        <DatePicker autoOk label="End" value={end} onChange={handleEndChange} />
+        <Button onClick={handleYesterday}>Yesterday</Button>
+        <Button onClick={handleToday}>Today</Button>
       </Grid>
+
+      {currentPatientObservationError && (
+        <Typography variant="h6" color="error" style={{ marginTop: 24 }}>
+          {currentPatientObservationError.message}
+        </Typography>
+      )}
 
       {currentPatientObservationLoading && (
         <Grid container alignItems="center" justify="center">
@@ -75,9 +88,8 @@ function PatientObservationComponent(props) {
       )}
 
       <br />
-      {!currentPatientObservationLoading && currentPatientObservation && (
-        <PatientObservationTableComponent rows={rows} />
-      )}
+      {showTable && <PatientObservationTableComponent rows={rows} />}
+      {noItems && <Typography style={{ marginTop: 24 }}>There are no results in this date range</Typography>}
     </StandardLayout>
   );
 }

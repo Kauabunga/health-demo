@@ -26,7 +26,10 @@ class ConfigContainer extends Component {
       handleBasePathObservationChange,
 
       handleClientIdChange,
-      handleClientSecretChange
+      handleClientSecretChange,
+
+      errorsObservation,
+      handleErrorsObservationChange
     } = this.context;
 
     const fields = [
@@ -45,7 +48,15 @@ class ConfigContainer extends Component {
         value: base_path_observation
       },
       { label: "Client Id", key: "client_id", onChange: handleClientIdChange, value: client_id },
-      { label: "Client Secret", key: "client_secret", onChange: handleClientSecretChange, value: client_secret }
+      { label: "Client Secret", key: "client_secret", onChange: handleClientSecretChange, value: client_secret },
+
+      {
+        type: "checkbox",
+        label: "Errors Observable",
+        key: "errorsObservation",
+        onChange: handleErrorsObservationChange,
+        checked: !!errorsObservation
+      }
     ];
 
     return <Layout handleSubmit={this.handleSubmit} fields={fields} />;
