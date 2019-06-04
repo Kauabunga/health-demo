@@ -36,26 +36,27 @@ class CredentialsState {
   base_path_patient = store.get("base_path_patient") || "/fhir-4-0-1/Patient";
   base_path_observation = store.get("base_path_observation") || "/fhir-4-0-1/Observation";
 
-  handleBaseUriChange = handleChange("base_uri").bind(this);
-  handleBasePathOAuthChange = handleChange("base_path_oauth").bind(this);
-  handleBasePathPatientChange = handleChange("base_path_patient").bind(this);
-  handleBasePathObservationChange = handleChange("base_path_observation").bind(this);
+  handleBaseUriChange = handleChangeText("base_uri").bind(this);
+  handleBasePathOAuthChange = handleChangeText("base_path_oauth").bind(this);
+  handleBasePathPatientChange = handleChangeText("base_path_patient").bind(this);
+  handleBasePathObservationChange = handleChangeText("base_path_observation").bind(this);
 
-  handleClientIdChange = handleChange("client_id").bind(this);
-  handleClientSecretChange = handleChange("client_secret").bind(this);
+  handleClientIdChange = handleChangeText("client_id").bind(this);
+  handleClientSecretChange = handleChangeText("client_secret").bind(this);
 
   errorsObservation = getBooleanStore("errorsObservation", true);
-  handleErrorsObservationChange = handleChange("errorsObservation").bind(this);
+  handleErrorsObservationChange = handleChangeCheckbox("errorsObservation").bind(this);
 }
 
-function handleChange(key) {
+function handleChangeCheckbox(key) {
   return function(event) {
-    if (typeof event.target.checked !== "undefined") {
-      store.set(key, event.target.checked);
-      this[key] = event.target.checked;
-      return;
-    }
+    store.set(key, event.target.checked);
+    this[key] = event.target.checked;
+  };
+}
 
+function handleChangeText(key) {
+  return function(event) {
     store.set(key, event.target.value);
     this[key] = event.target.value;
   };
