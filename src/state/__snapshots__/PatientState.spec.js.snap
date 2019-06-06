@@ -13,8 +13,10 @@ Object {
   "name": "Kloe Roberson",
   "nextOfKin": Object {
     "email": "Charles.Mcfadden@nok.AdaLovelace.testvillages.rymanhealthcare.com",
+    "gender": "male",
     "name": "Charles Mcfadden",
     "phone": undefined,
+    "relationship": "First Next-of-Kin (Son)",
   },
   "photo": "",
 }

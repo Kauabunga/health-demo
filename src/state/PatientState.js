@@ -224,13 +224,16 @@ export function transformPatient(patient) {
     nextOfKinContact &&
     nextOfKinContact.name &&
     nextOfKinContact.name.given.concat(nextOfKinContact.name.family).join(" ");
-
   const nextOfKinPhone = nextOfKinContact && nextOfKinContact.telecom.find(({ system }) => system === "phone");
   const nextOfKinEmail = nextOfKinContact && nextOfKinContact.telecom.find(({ system }) => system === "email");
+  const nextOfKinGender = nextOfKinContact && nextOfKinContact.gender;
+  const nextOfKinRelationship = nextOfKinContact && nextOfKinContact.relationship.map(({ text }) => text).join(", ");
   const nextOfKin = {
     name: nextOfKinName,
     phone: nextOfKinPhone && nextOfKinPhone.value,
-    email: nextOfKinEmail && nextOfKinEmail.value
+    email: nextOfKinEmail && nextOfKinEmail.value,
+    gender: nextOfKinGender,
+    relationship: nextOfKinRelationship
   };
 
   // EXTENSIONS
