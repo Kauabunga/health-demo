@@ -119,7 +119,7 @@ export const patientStore = new decorated();
 export default React.createContext(patientStore);
 
 async function getPatient(patientId) {
-  const { client_id, base_uri, base_path_patient } = credentialsStore;
+  const { client_id, base_uri, base_path_patient, errorsPatient } = credentialsStore;
   const { session } = authStore;
   const { id_token } = session || {};
 
@@ -142,14 +142,20 @@ async function getPatient(patientId) {
 
     return transformPatient(data);
   } catch (error) {
-    console.error("Error getting patient", patientId, error);
+    console.error("Error getting patient", errorsPatient, patientId, error);
+
+    // If errors are enabled
+    if (errorsPatient) {
+      throw error;
+    }
+
     await wait(getRandomInt(400, 2500));
     return transformPatient(getDummyPatient());
   }
 }
 
 async function searchPatient(id, birthdate) {
-  const { client_id, base_uri, base_path_patient } = credentialsStore;
+  const { client_id, base_uri, base_path_patient, errorsPatient } = credentialsStore;
   const { session } = authStore;
   const { id_token } = session || {};
 
@@ -181,7 +187,13 @@ async function searchPatient(id, birthdate) {
 
     return transformPatientSearch(data);
   } catch (error) {
-    console.error("Error searching patient", id, birthdate, error);
+    console.error("Error searching patient", errorsPatient, id, birthdate, error);
+
+    // If errors are enabled
+    if (errorsPatient) {
+      throw error;
+    }
+
     await wait(getRandomInt(400, 2500));
     return transformPatientSearch(getDummySearchResult());
   }

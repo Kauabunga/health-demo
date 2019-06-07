@@ -12,6 +12,7 @@ class HomeContainer extends Component {
       patientIds,
       searchPatient,
       isSearchLoading,
+      isSearchError,
       currentSearchResult,
       searchNhi,
       searchBirthdate
@@ -23,6 +24,7 @@ class HomeContainer extends Component {
         searchNhi={searchNhi}
         currentSearchResult={currentSearchResult}
         isSearchLoading={isSearchLoading}
+        isSearchError={isSearchError}
         searchBirthdate={searchBirthdate}
         searchPatient={searchPatient}
       />

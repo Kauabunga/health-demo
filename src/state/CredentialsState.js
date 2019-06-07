@@ -33,8 +33,8 @@ class CredentialsState {
 
   base_uri = store.get("base_uri") || "https://apac-syd-partner02-test.apigee.net";
   base_path_oauth = store.get("base_path_oauth") || "/ryman-oauth/token";
-  base_path_patient = store.get("base_path_patient") || "/fhir-4-0-1/Patient";
-  base_path_observation = store.get("base_path_observation") || "/fhir-4-0-1/Observation";
+  base_path_patient = store.get("base_path_patient") || "/fhir4-0-0/Patient";
+  base_path_observation = store.get("base_path_observation") || "/fhir4-0-0/Observation";
 
   handleBaseUriChange = handleChangeText("base_uri").bind(this);
   handleBasePathOAuthChange = handleChangeText("base_path_oauth").bind(this);
@@ -46,6 +46,10 @@ class CredentialsState {
 
   errorsObservation = getBooleanStore("errorsObservation", true);
   handleErrorsObservationChange = handleChangeCheckbox("errorsObservation").bind(this);
+  errorsPatient = getBooleanStore("errorsPatient", true);
+  handleErrorsPatientChange = handleChangeCheckbox("errorsPatient").bind(this);
+  errorsCondition = getBooleanStore("errorsCondition", true);
+  handleErrorsConditionChange = handleChangeCheckbox("errorsCondition").bind(this);
 }
 
 function handleChangeCheckbox(key) {
@@ -78,7 +82,11 @@ const decorated = decorate(CredentialsState, {
   handleBasePathObservationChange: action,
 
   errorsObservation: observable,
-  handleErrorsObservationChange: action
+  handleErrorsObservationChange: action,
+  errorsPatient: observable,
+  handleErrorsPatientChange: action,
+  errorsCondition: observable,
+  handleErrorsConditionChange: action
 });
 
 export const credentialsStore = new decorated();

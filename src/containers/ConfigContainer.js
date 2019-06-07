@@ -29,7 +29,13 @@ class ConfigContainer extends Component {
       handleClientSecretChange,
 
       errorsObservation,
-      handleErrorsObservationChange
+      handleErrorsObservationChange,
+
+      errorsPatient,
+      handleErrorsPatientChange,
+
+      errorsCondition,
+      handleErrorsConditionChange
     } = this.context;
 
     const fields = [
@@ -52,10 +58,24 @@ class ConfigContainer extends Component {
 
       {
         type: "checkbox",
-        label: "Errors Observable",
+        label: "Enable errors /Observable",
         key: "errorsObservation",
         onChange: handleErrorsObservationChange,
         checked: !!errorsObservation
+      },
+      {
+        type: "checkbox",
+        label: "Enable errors /Patient",
+        key: "errorsPatient",
+        onChange: handleErrorsPatientChange,
+        checked: !!errorsPatient
+      },
+      {
+        type: "checkbox",
+        label: "Enable errors /Condition",
+        key: "errorsCondition",
+        onChange: handleErrorsConditionChange,
+        checked: !!errorsCondition
       }
     ];
 

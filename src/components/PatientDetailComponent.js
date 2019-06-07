@@ -82,18 +82,25 @@ const DetailPatient = ({ currentPatient }) => (
   <Grid item style={{ paddingRight: 24 }}>
     <DetailItem label="Name" value={currentPatient.name} />
     <Divider style={{ marginTop: 12, marginBottom: 12 }} />
+
     <DetailItem label="Email" value={currentPatient.email} />
     <Divider style={{ marginTop: 12, marginBottom: 12 }} />
+
     <DetailItem label="Address" value={currentPatient.address} />
     <Divider style={{ marginTop: 12, marginBottom: 12 }} />
+
     <DetailItem label="Birth date" value={currentPatient.birthDate} />
     <Divider style={{ marginTop: 12, marginBottom: 12 }} />
+
     <DetailItem label="Gender" value={currentPatient.gender} />
     <Divider style={{ marginTop: 12, marginBottom: 12 }} />
+
     <DetailItem label="Marital status" value={currentPatient.maritalStatus} />
     <Divider style={{ marginTop: 12, marginBottom: 12 }} />
+
     <DetailItem label="Ethnicity" value={currentPatient.ethnicity} />
     <Divider style={{ marginTop: 12, marginBottom: 12 }} />
+
     <DetailItem label="Care plan" value={currentPatient.carePlan} />
     <Divider style={{ marginTop: 12, marginBottom: 12 }} />
 
@@ -128,7 +135,7 @@ const DetailNotes = ({ notes: defaultNotes }) => {
       <Grid container direction="column">
         {(notes || []).map(({ id, text }) => (
           <Card key={id || text} style={{ marginBottom: 12, padding: 12 }}>
-            <Typography>{text || "asdf"}</Typography>
+            <Typography>{text || "unknown"}</Typography>
           </Card>
         ))}
 
