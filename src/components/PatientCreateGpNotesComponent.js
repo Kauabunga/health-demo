@@ -118,7 +118,15 @@ const DetailNotes = ({
 };
 
 function PatientCreateGpNotesComponent(props) {
-  const { patientId, currentPatient, currentPatientLoading, currentPatientError } = props;
+  const {
+    createNote,
+    noteSubmitting,
+    noteError,
+    patientId,
+    currentPatient,
+    currentPatientLoading,
+    currentPatientError
+  } = props;
 
   // TEXT
   const [carePlan, setPlan] = useState("");
@@ -153,6 +161,21 @@ function PatientCreateGpNotesComponent(props) {
 
   const handleSubmit = e => {
     e.preventDefault();
+
+    if (noteSubmitting) {
+      return;
+    }
+
+    const values = {
+      carePlan,
+      clinicalImpression,
+      medicationRequest,
+      procedure,
+      notes,
+      currentPatient
+    };
+
+    createNote(values);
   };
 
   if (currentPatientLoading) {
@@ -259,18 +282,18 @@ function PatientCreateGpNotesComponent(props) {
         <br />
 
         <Button
-          component={Link}
-          to={`/patient/${patientId}`}
           type="submit"
           variant="contained"
           color="primary"
           size="large"
-          style={{ marginTop: 12, marginRight: 12 }}
+          disabled={noteSubmitting}
+          style={{ width: 120, marginTop: 12, marginRight: 12 }}
         >
-          Submit
+          {noteSubmitting ? <CircularProgress size={26} color="inherit" /> : "Submit"}
         </Button>
 
         <Button
+          disabled={noteSubmitting}
           component={Link}
           to={`/patient/${patientId}`}
           variant="outlined"
@@ -283,6 +306,8 @@ function PatientCreateGpNotesComponent(props) {
         </Button>
 
         <br />
+
+        {noteError && <Typography color="error">{JSON.stringify(noteError)}</Typography>}
         <br />
         <br />
         <br />

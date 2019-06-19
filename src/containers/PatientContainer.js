@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import { observer } from 'mobx-react';
+import React, { Component } from "react";
+import { observer } from "mobx-react";
 
-import PatientState from '../state/PatientState';
+import PatientState from "../state/PatientState";
 
 class PatientContainer extends Component {
   static contextType = PatientState;
@@ -17,7 +17,7 @@ class PatientContainer extends Component {
   };
 
   render() {
-    const { Layout, patientId } = this.props;
+    const { Layout, patientId, ...rest } = this.props;
     const { patients, patientError, patientLoading } = this.context;
 
     const currentPatient = patients[patientId];
@@ -26,6 +26,7 @@ class PatientContainer extends Component {
 
     return (
       <Layout
+        {...rest}
         patientId={patientId}
         currentPatient={currentPatient}
         currentPatientError={currentPatientError}

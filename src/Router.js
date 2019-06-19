@@ -10,7 +10,7 @@ import AuthContainer from "./containers/AuthContainer";
 import ConfigContainer from "./containers/ConfigContainer";
 import HomeContainer from "./containers/HomeContainer";
 import PatientContainer from "./containers/PatientContainer";
-import PatientGpNotesContainer from "./containers/PatientContainer";
+import PatientGpNotesContainer from "./containers/PatientGpNotesContainer";
 import PatientObservationContainer from "./containers/PatientObservationContainer";
 
 import NavigationComponent from "./components/NavigationComponent";
@@ -54,7 +54,14 @@ export default () => (
             component={({ match }) => {
               const { params } = match;
               const { patientId } = params;
-              return <PatientGpNotesContainer patientId={patientId} Layout={PatientCreateGpNotesComponent} />;
+              return (
+                <PatientContainer
+                  patientId={patientId}
+                  Layout={props => (
+                    <PatientGpNotesContainer patientId={patientId} {...props} Layout={PatientCreateGpNotesComponent} />
+                  )}
+                />
+              );
             }}
           />
         </div>

@@ -1,4 +1,64 @@
-//
+import React from "react";
+import { decorate, observable, action } from "mobx";
+import axios from "axios";
+
+import { credentialsStore } from "./CredentialsState";
+import { authStore } from "./AuthState";
+
+class PatientGpNotesState {
+  noteSubmitting = false;
+  noteError = null;
+
+  createNote = async note => {
+    console.log("createNote", { note });
+
+    this.noteSubmitting = true;
+    this.noteError = null;
+
+    try {
+      await wait(1000);
+      const result = await createGpNote(note);
+      console.log("GP NOTE Success", result);
+    } catch (error) {
+      console.log("Error creating note", note, error);
+
+      this.noteError = { message: error.message, error: error };
+    }
+
+    this.noteSubmitting = false;
+  };
+}
+
+const decorated = decorate(PatientGpNotesState, {
+  noteSubmitting: observable,
+  noteError: observable,
+
+  createNote: action
+});
+
+export const patientGpNoteStore = new decorated();
+
+export default React.createContext(patientGpNoteStore);
+
+async function createGpNote(note) {
+  console.log("Creating note", note);
+
+  const { patient, carePlan, clinicalImpression, medicationRequest, procedure, notes } = note;
+
+  // TODO: transform...
+
+  return true;
+}
+
+async function wait(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms || 500));
+}
+
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 function getDummyGPNotesSubmitComposition() {
   return {
