@@ -34,11 +34,24 @@ const Interceptor = withRouter(function(props, context) {
     axios.interceptors.response.use(
       response => response,
       error => {
+        if (error.response) {
+          switch (error.response.status) {
+            case 401:
+            case 403:
+              authStore.updateSession(null);
+              props.history.push(`/auth-error/${error.response.status}`);
+              return;
+            default:
+              return;
+          }
+        }
+
         if (!error.response) {
           // Fatal error
           authStore.updateSession(null);
           props.history.push(`/auth-error/${error.toString()}`);
         }
+
         return Promise.reject(error);
       }
     );
@@ -95,7 +108,7 @@ export default () => (
               const { message } = params;
               return (
                 <StandardLayout>
-                  <Typography style={{ textAlign: "left", marginBottom: 96 }} variant="h4" color="error">
+                  <Typography style={{ textAlign: "left", marginBottom: 96 }} variant="h2" color="error">
                     {message}
                   </Typography>
                   <AuthContainer Layout={LoginComponent} />

@@ -75,10 +75,9 @@ function HomeComponent({
           <Grid container wrap="nowrap">
             <Grid container direction="column" style={{ marginRight: 24 }}>
               <Typography variant="subtitle1" gutterBottom>
-                Lookup a user
+                Search for a patient
               </Typography>
               <Divider></Divider>
-              <br />
               <br />
               <Grid container>
                 <TextField
@@ -110,8 +109,6 @@ function HomeComponent({
                 Example patient searches
               </Typography>
               <Divider></Divider>
-              <br />
-              <br />
               <List>
                 {testIds.map(({ id, dob }) => (
                   <ListItem key={id} button onClick={() => searchPatient(id, dob)}>
@@ -126,8 +123,6 @@ function HomeComponent({
                 Test patients
               </Typography>
               <Divider></Divider>
-              <br />
-              <br />
               <List>
                 {testPatients.map(({ id }) => (
                   <ListItem key={id} button component={Link} to={`/patient/${id}`}>
