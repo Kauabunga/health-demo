@@ -179,8 +179,14 @@ function PatientDetailComponent(props) {
             <Avatar alt={currentPatient.name} src={currentPatient.photo} />
           )) || <Avatar>{currentPatient.initials}</Avatar>}
           <Typography variant="h6" style={{ marginLeft: 8 }}>
-            Patient {patientId}
+            {currentPatient.name} (Patient {patientId})
           </Typography>
+
+          <div style={{ flexGrow: 1 }}></div>
+
+          <Button color="primary" variant="contained" component={Link} to={`/patient/${patientId}/notes`}>
+            Add Consultation Note
+          </Button>
         </Grid>
       )}
 
@@ -193,7 +199,6 @@ function PatientDetailComponent(props) {
               patientId={patientId}
               Layout={({ currentPatientCondition }) => {
                 const { notes } = currentPatientCondition || {};
-
                 return (currentPatientCondition && <DetailNotes notes={notes} />) || <CircularProgress />;
               }}
             />
@@ -201,8 +206,11 @@ function PatientDetailComponent(props) {
         </Card>
       )}
 
-      {currentPatientError && <pre style={{ color: red[500] }}>{JSON.stringify(currentPatientError, null, 2)}</pre>}
-
+      {currentPatientError && (
+        <pre style={{ color: red[500], width: "100%", overflowX: "scroll" }}>
+          {JSON.stringify(currentPatientError, null, 2)}
+        </pre>
+      )}
       <Button component={Link} to="/" variant="outlined" color="primary" style={{ marginTop: 12 }}>
         Back
       </Button>

@@ -10,6 +10,7 @@ import AuthContainer from "./containers/AuthContainer";
 import ConfigContainer from "./containers/ConfigContainer";
 import HomeContainer from "./containers/HomeContainer";
 import PatientContainer from "./containers/PatientContainer";
+import PatientGpNotesContainer from "./containers/PatientContainer";
 import PatientObservationContainer from "./containers/PatientObservationContainer";
 
 import NavigationComponent from "./components/NavigationComponent";
@@ -18,6 +19,7 @@ import ConfigComponent from "./components/ConfigComponent";
 import LoginComponent from "./components/LoginComponent";
 import PatientDetailComponent from "./components/PatientDetailComponent";
 import PatientObservationComponent from "./components/PatientObservationComponent";
+import PatientCreateGpNotesComponent from "./components/PatientCreateGpNotesComponent";
 
 import { theme } from "./Theme";
 
@@ -34,6 +36,7 @@ export default () => (
           <PublicOnlyRoute exact path="/login" component={() => <AuthContainer Layout={LoginComponent} />} />
           <Route exact path="/config" component={() => <ConfigContainer Layout={ConfigComponent} />} />
           <Route
+            exact
             path="/patient/:patientId"
             component={({ match }) => {
               const { params } = match;
@@ -44,6 +47,14 @@ export default () => (
                   <PatientObservationContainer patientId={patientId} Layout={PatientObservationComponent} />
                 </Fragment>
               );
+            }}
+          />
+          <Route
+            path="/patient/:patientId/notes"
+            component={({ match }) => {
+              const { params } = match;
+              const { patientId } = params;
+              return <PatientGpNotesContainer patientId={patientId} Layout={PatientCreateGpNotesComponent} />;
             }}
           />
         </div>
