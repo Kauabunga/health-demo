@@ -211,7 +211,7 @@ function PatientCreateGpNotesComponent(props) {
 
         <br />
 
-        <Grid container flexWrap="wrap">
+        <Grid container wrap="wrap">
           <Grid item style={{ flexGrow: 1, minWidth: 400, maxWidth: 500, marginRight: 24 }}>
             <Typography variant="h6" gutterBottom>
               Examination

@@ -8,7 +8,7 @@ class AuthContainer extends Component {
 
   render() {
     const { Layout } = this.props;
-    const { isAuthenticated, errorMessage, handleLogin, authenticating } = this.context;
+    const { isAuthenticated, errorMessage, handleLogout, handleLogin, authenticating } = this.context;
 
     return (
       <Layout
@@ -16,6 +16,7 @@ class AuthContainer extends Component {
         isAuthenticated={isAuthenticated}
         authenticating={authenticating}
         handleLogin={handleLogin}
+        handleLogout={handleLogout}
       />
     );
   }

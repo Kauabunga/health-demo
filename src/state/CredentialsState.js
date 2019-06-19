@@ -35,11 +35,13 @@ class CredentialsState {
   base_path_oauth = store.get("base_path_oauth") || "/ryman-oauth/token";
   base_path_patient = store.get("base_path_patient") || "/fhir4-0-0/Patient";
   base_path_observation = store.get("base_path_observation") || "/fhir4-0-0/Observation";
+  base_path_composition = store.get("base_path_composition") || "/fhir4-0-0/Composition";
 
   handleBaseUriChange = handleChangeText("base_uri").bind(this);
   handleBasePathOAuthChange = handleChangeText("base_path_oauth").bind(this);
   handleBasePathPatientChange = handleChangeText("base_path_patient").bind(this);
   handleBasePathObservationChange = handleChangeText("base_path_observation").bind(this);
+  handleBasePathCompositionChange = handleChangeText("base_path_composition").bind(this);
 
   handleClientIdChange = handleChangeText("client_id").bind(this);
   handleClientSecretChange = handleChangeText("client_secret").bind(this);
@@ -76,10 +78,12 @@ const decorated = decorate(CredentialsState, {
   base_path_oauth: observable,
   base_path_patient: observable,
   base_path_observation: observable,
+  base_path_composition: observable,
   handleBaseUriChange: action,
   handleBasePathOAuthChange: action,
   handleBasePathPatientChange: action,
   handleBasePathObservationChange: action,
+  handleBasePathCompositionChange: action,
 
   errorsObservation: observable,
   handleErrorsObservationChange: action,

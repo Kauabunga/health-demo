@@ -1,5 +1,6 @@
 import React from "react";
 import { decorate, observable, action } from "mobx";
+import uuidv5 from "uuid/v5";
 import axios from "axios";
 
 import { credentialsStore } from "./CredentialsState";
@@ -42,24 +43,204 @@ export default React.createContext(patientGpNoteStore);
 
 async function createGpNote(note) {
   console.log("Creating note", note);
+  const { client_id, base_uri, base_path_composition } = credentialsStore;
+  const { session } = authStore;
+  const { id_token } = session || {};
 
-  const { patient, carePlan, clinicalImpression, medicationRequest, procedure, notes } = note;
+  const composition = transformNotes(note);
 
-  // TODO: transform...
+  const Authorization = `Bearer ${id_token}`;
+  const url = `${base_uri}${base_path_composition}`;
 
-  return true;
+  try {
+    const response = await axios.post(url, composition, {
+      headers: {
+        Accept: "application/json",
+        Authorization,
+        apikey: client_id
+      }
+    });
+    const { status, data } = response;
+
+    console.log("GP NOTES RESPONSE", status, data);
+
+    if (status !== 200) {
+      throw new Error(`Invalid status ${status}`);
+    }
+
+    return response;
+  } catch (error) {
+    console.error("Error creating gp note", composition, error);
+    throw error;
+  }
+}
+
+/**
+ * MEGA FUNCTION
+ * MEGA FUNCTION
+ * MEGA FUNCTION
+ */
+export function transformNotes(note, date) {
+  const { patient, carePlan, clinicalImpression, medicationRequest, procedure, notes } = note || {};
+
+  const TRANSFORMATION_NAMESPACE = "1b671a64-40d5-491e-99b0-da01ff1f3341";
+
+  const renderDiv = content => `<div xmlns="http://www.w3.org/1999/xhtml">${content}</div>`;
+
+  const carePlanResource = carePlan && {
+    resourceType: "CarePlan",
+    id: uuidv5(carePlan, TRANSFORMATION_NAMESPACE),
+    text: {
+      div: renderDiv(carePlan)
+    }
+  };
+
+  const medicationResource = medicationRequest && {
+    resourceType: "MedicationRequest",
+    id: uuidv5(medicationRequest, TRANSFORMATION_NAMESPACE),
+    text: {
+      div: renderDiv(medicationRequest)
+    }
+  };
+
+  const procedureResource = procedure && {
+    resourceType: "Procedure",
+    id: uuidv5(procedure, TRANSFORMATION_NAMESPACE),
+    text: {
+      div: renderDiv(procedure)
+    }
+  };
+
+  const clinicalImpressionResource = clinicalImpression && {
+    resourceType: "Procedure",
+    id: uuidv5(clinicalImpression, TRANSFORMATION_NAMESPACE),
+    text: {
+      div: renderDiv(clinicalImpression)
+    }
+  };
+
+  const observationResources =
+    notes &&
+    !!notes.length &&
+    notes.map(note => ({
+      resourceType: "Observation",
+      id: uuidv5(note.text, TRANSFORMATION_NAMESPACE),
+      text: {
+        div: renderDiv(note.text)
+      }
+    }));
+
+  const organizationResource = {
+    resourceType: "Organization",
+    id: `${uuidv5("Organization", TRANSFORMATION_NAMESPACE)}`,
+    name: "Dr Phil's Practice"
+  };
+
+  const practitionerResource = {
+    resourceType: "Practitioner",
+    id: `${uuidv5("Practitioner", TRANSFORMATION_NAMESPACE)}`,
+    name: [
+      {
+        given: ["Phil"],
+        prefix: ["Dr"]
+      }
+    ]
+  };
+
+  console.log(patient);
+
+  // TODO: USE PASSES CLIENT DEEETS
+  // TODO: USE PASSES CLIENT DEEETS
+  // TODO: USE PASSES CLIENT DEEETS
+  // TODO: USE PASSES CLIENT DEEETS
+  const patientResource = {
+    resourceType: "Patient",
+    id: "add8e052-d291-45a4-ade7-5c92fe0a6c25",
+    identifier: [
+      {
+        use: "secondary",
+        system: "http://rymanhealthcare.co.nz",
+        value: "2143.5"
+      },
+      {
+        use: "official",
+        system: "http://health.govt.nz/nhi",
+        value: "ZGD5674"
+      }
+    ],
+    birthDate: "1912-11-10"
+  };
+
+  const contained = []
+    .concat(patientResource)
+    .concat(medicationResource)
+    .concat(carePlanResource)
+    .concat(clinicalImpressionResource)
+    .concat(procedureResource)
+    .concat(observationResources)
+    .concat(organizationResource)
+    .concat(practitionerResource)
+    .filter(item => !!item);
+
+  const makeCode = code => ({ coding: [{ code }] });
+  const sectionCodes = {
+    CarePlan: makeCode("18776-5"),
+    Procedure: makeCode("29554-3"),
+    Condition: makeCode("51848-0"),
+    Observation: makeCode("8716-3"),
+    MedicationRequest: makeCode("18776-5"),
+    ClinicalImpression: makeCode("29545-1")
+  };
+  const sectionResourceTypes = ["CarePlan", "Procedure", "Condition", "Observation", "MedicationRequest"];
+  const containedGroupedByResource = contained
+    .filter(({ resourceType }) => sectionResourceTypes.includes(resourceType))
+    .reduce(
+      (acc, current) => ({ ...acc, [current.resourceType]: [...(acc[current.resourceType] || []), current] }),
+      {}
+    );
+
+  const section = Object.keys(containedGroupedByResource).map(resourceType => ({
+    resourceType,
+    code: makeCode(sectionCodes[resourceType]),
+    entry: containedGroupedByResource[resourceType].map(item => ({ id: `#${item.id}`, type: resourceType }))
+  }));
+
+  return {
+    resourceType: "Composition",
+    status: "final",
+    title: "GP notes",
+    date: date || new Date().toISOString(),
+    contained,
+    section,
+    identifier: {
+      system: "http://mypractice.co.nz/Notes",
+      value: "12345"
+    },
+
+    category: [{ coding: [{ code: "11488-4", display: "Consult note" }] }],
+
+    type: {
+      coding: [{ code: "75476-2", display: "Physician Note" }]
+    },
+
+    subject: {
+      reference: `#${uuidv5("patient", TRANSFORMATION_NAMESPACE)}`,
+      type: "Patient"
+    },
+
+    author: [{ reference: `#${uuidv5("author", TRANSFORMATION_NAMESPACE)}` }],
+
+    custodian: {
+      reference: `#${uuidv5("custodian", TRANSFORMATION_NAMESPACE)}`
+    }
+  };
 }
 
 async function wait(ms) {
   return new Promise(resolve => setTimeout(resolve, ms || 500));
 }
 
-function getRandomInt(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
+// eslint-disable-next-line
 function getDummyGPNotesSubmitComposition() {
   return {
     resourceType: "Composition",

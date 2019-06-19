@@ -12,7 +12,7 @@ class PatientContainer extends Component {
 
     const alreadyExists = !!patients[patientId];
     if (patientId && !alreadyExists) {
-      loadPatient(patientId);
+      setTimeout(() => loadPatient(patientId));
     }
   };
 

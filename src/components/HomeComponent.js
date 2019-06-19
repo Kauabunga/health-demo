@@ -1,10 +1,11 @@
-import React from "react";
+import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Card from "@material-ui/core/Card";
 import TextField from "@material-ui/core/TextField";
+import Divider from "@material-ui/core/Divider";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -16,7 +17,6 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import { red } from "@material-ui/core/colors";
 
 import DelayComponent from "./DelayComponent";
-import AuthState from "../state/AuthState";
 import PatientContainer from "../containers/PatientContainer";
 import StandardLayout from "../layout/StandardLayout";
 
@@ -26,6 +26,8 @@ const testIds = [
   { id: "ZJP8740", dob: "1924-03-19" },
   { id: "ZCF1582", dob: "1908-03-08" }
 ];
+
+const testPatients = [{ id: "2143.1" }, { id: "2143.19" }];
 
 const styles = {
   list: {
@@ -69,12 +71,15 @@ function HomeComponent({
         Welcome
       </Typography>
       <form onSubmit={handleSubmit}>
-        <Card style={{ padding: 24, minHeight: 100 }}>
+        <Card style={{ padding: 24, minHeight: "50vh" }}>
           <Grid container wrap="nowrap">
-            <Grid container direction="column">
+            <Grid container direction="column" style={{ marginRight: 24 }}>
               <Typography variant="subtitle1" gutterBottom>
                 Lookup a user
               </Typography>
+              <Divider></Divider>
+              <br />
+              <br />
               <Grid container>
                 <TextField
                   id="nhi"
@@ -101,13 +106,51 @@ function HomeComponent({
             </Grid>
 
             <Grid container direction="column">
-              <Typography variant="subtitle1">Example patients</Typography>
+              <Typography variant="subtitle1" gutterBottom>
+                Example patient searches
+              </Typography>
+              <Divider></Divider>
+              <br />
+              <br />
               <List>
                 {testIds.map(({ id, dob }) => (
                   <ListItem key={id} button onClick={() => searchPatient(id, dob)}>
                     <Typography>
-                      {id} {dob}
+                      <strong>{id}</strong>&nbsp;&nbsp;&nbsp;&nbsp;{dob}
                     </Typography>
+                  </ListItem>
+                ))}
+              </List>
+
+              <Typography variant="subtitle1" gutterBottom>
+                Test patients
+              </Typography>
+              <Divider></Divider>
+              <br />
+              <br />
+              <List>
+                {testPatients.map(({ id }) => (
+                  <ListItem key={id} button component={Link} to={`/patient/${id}`}>
+                    <PatientContainer
+                      key={id}
+                      patientId={id}
+                      Layout={({ currentPatientError, currentPatient, currentPatientLoading }) => (
+                        <Fragment>
+                          <ListItemAvatar>
+                            {currentPatientLoading ? (
+                              <DelayComponent wait={100}>
+                                <CircularProgress />
+                              </DelayComponent>
+                            ) : (
+                              (currentPatient && currentPatient.photo && (
+                                <Avatar alt={currentPatient.name} src={currentPatient.photo} />
+                              )) || <Avatar>{currentPatient && currentPatient.initials}</Avatar>
+                            )}
+                          </ListItemAvatar>
+                          {currentPatient && <ListItemText primary={`${currentPatient.name} (${id})`} />}
+                        </Fragment>
+                      )}
+                    />
                   </ListItem>
                 ))}
               </List>
@@ -167,16 +210,6 @@ function HomeComponent({
           />
         ))}
       </List>
-
-      <div>
-        <AuthState.Consumer>
-          {({ handleLogout }) => (
-            <Button onClick={handleLogout} color="secondary" variant="outlined">
-              Logout
-            </Button>
-          )}
-        </AuthState.Consumer>
-      </div>
     </StandardLayout>
   );
 }

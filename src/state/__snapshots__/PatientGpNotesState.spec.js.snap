@@ -1,0 +1,208 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Should transform the notes into a composition 1`] = `
+Object {
+  "author": Array [
+    Object {
+      "reference": "#7b45ce2f-ee43-5998-ba58-053d6a81b270",
+    },
+  ],
+  "category": Array [
+    Object {
+      "coding": Array [
+        Object {
+          "code": "11488-4",
+          "display": "Consult note",
+        },
+      ],
+    },
+  ],
+  "contained": Array [
+    Object {
+      "resourceType": "Patient",
+    },
+    Object {
+      "id": "5e193dff-8da2-5631-b468-faf8f32ed5ce",
+      "resourceType": "MedicationRequest",
+      "text": Object {
+        "div": "<div xmlns=\\"http://www.w3.org/1999/xhtml\\">medicationRequest</div>",
+      },
+    },
+    Object {
+      "id": "adac8e44-d452-5487-842c-f130e8b7f892",
+      "resourceType": "CarePlan",
+      "text": Object {
+        "div": "<div xmlns=\\"http://www.w3.org/1999/xhtml\\">carePlan</div>",
+      },
+    },
+    Object {
+      "id": "7cc25735-29d2-51b3-9e65-bc2b10cc2137",
+      "resourceType": "Procedure",
+      "text": Object {
+        "div": "<div xmlns=\\"http://www.w3.org/1999/xhtml\\">clinicalImpression</div>",
+      },
+    },
+    Object {
+      "id": "573e4900-ae11-5e44-917c-6f5a867441ff",
+      "resourceType": "Procedure",
+      "text": Object {
+        "div": "<div xmlns=\\"http://www.w3.org/1999/xhtml\\">procedure</div>",
+      },
+    },
+    Object {
+      "id": "796de488-156b-52b3-a83b-d4a0be1a4d95",
+      "resourceType": "Observation",
+      "text": Object {
+        "div": "<div xmlns=\\"http://www.w3.org/1999/xhtml\\">asdfasdfasdf</div>",
+      },
+    },
+    Object {
+      "id": "796de488-156b-52b3-a83b-d4a0be1a4d95",
+      "resourceType": "Observation",
+      "text": Object {
+        "div": "<div xmlns=\\"http://www.w3.org/1999/xhtml\\">asdfasdfasdf</div>",
+      },
+    },
+    Object {
+      "id": "6e15ae45-c8c2-5664-91c0-98b64d9406e3",
+      "name": "Dr Phil's Practice",
+      "resourceType": "Organization",
+    },
+    Object {
+      "id": "a54c8b35-9b3c-5931-a948-cc8343f24c9a",
+      "name": Array [
+        Object {
+          "given": Array [
+            "Phil",
+          ],
+          "prefix": Array [
+            "Dr",
+          ],
+        },
+      ],
+      "resourceType": "Practitioner",
+    },
+  ],
+  "custodian": Object {
+    "reference": "#7059c86f-9e2f-5cfe-9987-1703389738d1",
+  },
+  "date": 2019-06-19T21:03:58.678Z,
+  "identifier": Object {
+    "system": "http://mypractice.co.nz/Notes",
+    "value": "12345",
+  },
+  "resourceType": "Composition",
+  "section": Array [
+    Object {
+      "code": Object {
+        "coding": Array [
+          Object {
+            "code": Object {
+              "coding": Array [
+                Object {
+                  "code": "18776-5",
+                },
+              ],
+            },
+          },
+        ],
+      },
+      "entry": Array [
+        Object {
+          "id": "#5e193dff-8da2-5631-b468-faf8f32ed5ce",
+          "type": "MedicationRequest",
+        },
+      ],
+      "resourceType": "MedicationRequest",
+    },
+    Object {
+      "code": Object {
+        "coding": Array [
+          Object {
+            "code": Object {
+              "coding": Array [
+                Object {
+                  "code": "18776-5",
+                },
+              ],
+            },
+          },
+        ],
+      },
+      "entry": Array [
+        Object {
+          "id": "#adac8e44-d452-5487-842c-f130e8b7f892",
+          "type": "CarePlan",
+        },
+      ],
+      "resourceType": "CarePlan",
+    },
+    Object {
+      "code": Object {
+        "coding": Array [
+          Object {
+            "code": Object {
+              "coding": Array [
+                Object {
+                  "code": "29554-3",
+                },
+              ],
+            },
+          },
+        ],
+      },
+      "entry": Array [
+        Object {
+          "id": "#7cc25735-29d2-51b3-9e65-bc2b10cc2137",
+          "type": "Procedure",
+        },
+        Object {
+          "id": "#573e4900-ae11-5e44-917c-6f5a867441ff",
+          "type": "Procedure",
+        },
+      ],
+      "resourceType": "Procedure",
+    },
+    Object {
+      "code": Object {
+        "coding": Array [
+          Object {
+            "code": Object {
+              "coding": Array [
+                Object {
+                  "code": "8716-3",
+                },
+              ],
+            },
+          },
+        ],
+      },
+      "entry": Array [
+        Object {
+          "id": "#796de488-156b-52b3-a83b-d4a0be1a4d95",
+          "type": "Observation",
+        },
+        Object {
+          "id": "#796de488-156b-52b3-a83b-d4a0be1a4d95",
+          "type": "Observation",
+        },
+      ],
+      "resourceType": "Observation",
+    },
+  ],
+  "status": "final",
+  "subject": Object {
+    "reference": "#8c81dd86-4941-5ba4-95b3-5a594113f5a0",
+    "type": "Patient",
+  },
+  "title": "GP notes",
+  "type": Object {
+    "coding": Array [
+      Object {
+        "code": "75476-2",
+        "display": "Physician Note",
+      },
+    ],
+  },
+}
+`;

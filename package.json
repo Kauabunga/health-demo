@@ -25,7 +25,8 @@
     "react-dom": "^16.8.6",
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.0.1",
-    "store": "^2.0.12"
+    "store": "^2.0.12",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "husky": "^2.4.0",
