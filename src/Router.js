@@ -34,12 +34,19 @@ const Interceptor = withRouter(function(props, context) {
     axios.interceptors.response.use(
       response => response,
       error => {
+        if (process.env.NODE_ENV !== "production") {
+          return Promise.reject(error);
+        }
+
+        console.log("ERROR INTERCEPTOR", error.status);
+
         if (error.response) {
+          // TODO: 401/403 are valid for some api cases e.g. observations
           switch (error.response.status) {
             case 401:
             case 403:
-              authStore.updateSession(null);
-              props.history.push(`/auth-error/${error.response.status}`);
+              // authStore.updateSession(null);
+              // props.history.push(`/auth-error/${error.response.status}`);
               return;
             default:
               return;
@@ -72,7 +79,7 @@ export default () => (
           <PrivateRoute exact path="/" component={() => <HomeContainer Layout={HomeComponent} />} />
           <PublicOnlyRoute exact path="/login" component={() => <AuthContainer Layout={LoginComponent} />} />
           <Route exact path="/config" component={() => <ConfigContainer Layout={ConfigComponent} />} />
-          <Route
+          <PrivateRoute
             exact
             path="/patient/:patientId"
             component={({ match }) => {
@@ -86,7 +93,7 @@ export default () => (
               );
             }}
           />
-          <Route
+          <PrivateRoute
             path="/patient/:patientId/notes"
             component={({ match }) => {
               const { params } = match;

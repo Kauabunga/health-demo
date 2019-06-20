@@ -20,7 +20,7 @@ class PatientConditionState {
       const patient = await getPatientCondition(patientId, this.start, this.end);
       this.patientConditions = { ...this.patientConditions, [patientId]: patient };
     } catch (error) {
-      console.log("Error getting patient", patientId, error);
+      console.log("Error getting condition", patientId, error);
       this.patientConditionError = {
         ...this.patientConditionError,
         [patientId]: {

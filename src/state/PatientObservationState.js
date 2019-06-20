@@ -31,7 +31,7 @@ class PatientObservationState {
       const patient = await getPatientObservation(patientId, this.start, this.end);
       this.patientObservations = { ...this.patientObservations, [patientId]: patient };
     } catch (error) {
-      console.log("Error getting patient", patientId, error);
+      console.log("Error getting observation", patientId, error);
       this.patientObservationError = {
         ...this.patientObservationError,
         [patientId]: {

@@ -64,7 +64,7 @@ async function createGpNote(note) {
 
     console.log("GP NOTES RESPONSE", status, data);
 
-    if (status !== 200) {
+    if (status !== 201) {
       throw new Error(`Invalid status ${status}`);
     }
 
@@ -130,15 +130,17 @@ export function transformNotes(note, date) {
       }
     }));
 
+  const organizationId = uuidv5("Organization", TRANSFORMATION_NAMESPACE);
   const organizationResource = {
     resourceType: "Organization",
-    id: `${uuidv5("Organization", TRANSFORMATION_NAMESPACE)}`,
+    id: organizationId,
     name: "Dr Phil's Practice"
   };
 
+  const practitionerId = uuidv5("Practitioner", TRANSFORMATION_NAMESPACE);
   const practitionerResource = {
     resourceType: "Practitioner",
-    id: `${uuidv5("Practitioner", TRANSFORMATION_NAMESPACE)}`,
+    id: practitionerId,
     name: [
       {
         given: ["Phil"],
@@ -149,13 +151,10 @@ export function transformNotes(note, date) {
 
   console.log(patient);
 
-  // TODO: USE PASSES CLIENT DEEETS
-  // TODO: USE PASSES CLIENT DEEETS
-  // TODO: USE PASSES CLIENT DEEETS
-  // TODO: USE PASSES CLIENT DEEETS
+  const patientId = uuidv5("patient", TRANSFORMATION_NAMESPACE);
   const patientResource = {
     resourceType: "Patient",
-    id: "add8e052-d291-45a4-ade7-5c92fe0a6c25",
+    id: patientId,
     identifier: [
       {
         use: "secondary",
@@ -200,9 +199,8 @@ export function transformNotes(note, date) {
     );
 
   const section = Object.keys(containedGroupedByResource).map(resourceType => ({
-    resourceType,
-    code: makeCode(sectionCodes[resourceType]),
-    entry: containedGroupedByResource[resourceType].map(item => ({ id: `#${item.id}`, type: resourceType }))
+    code: sectionCodes[resourceType],
+    entry: containedGroupedByResource[resourceType].map(item => ({ reference: `#${item.id}`, type: resourceType }))
   }));
 
   return {
@@ -224,14 +222,14 @@ export function transformNotes(note, date) {
     },
 
     subject: {
-      reference: `#${uuidv5("patient", TRANSFORMATION_NAMESPACE)}`,
+      reference: `#${patientId}`,
       type: "Patient"
     },
 
-    author: [{ reference: `#${uuidv5("author", TRANSFORMATION_NAMESPACE)}` }],
+    author: [{ reference: `#${practitionerId}` }],
 
     custodian: {
-      reference: `#${uuidv5("custodian", TRANSFORMATION_NAMESPACE)}`
+      reference: `#${organizationId}`
     }
   };
 }
