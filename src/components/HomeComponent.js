@@ -71,7 +71,7 @@ function HomeComponent({
         Welcome
       </Typography>
       <form onSubmit={handleSubmit}>
-        <Card style={{ padding: 24, minHeight: "50vh" }}>
+        <Card style={{ padding: 24, minHeight: "42vh" }}>
           <Grid container wrap="nowrap">
             <Grid container direction="column" style={{ marginRight: 24 }}>
               <Typography variant="subtitle1" gutterBottom>

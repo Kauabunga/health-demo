@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
 import OutlinedInput from "@material-ui/core/OutlinedInput";
+import Modal from "@material-ui/core/Modal";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import FormControl from "@material-ui/core/FormControl";
 import Divider from "@material-ui/core/Divider";
@@ -45,6 +46,14 @@ const rootStyles = theme => ({
     [theme.breakpoints.up("md")]: {
       flexWrap: "nowrap"
     }
+  },
+  paper: {
+    position: "absolute",
+    width: 400,
+    backgroundColor: theme.palette.background.paper,
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(4),
+    outline: "none"
   }
 });
 
@@ -119,6 +128,7 @@ const DetailNotes = ({
 
 function PatientCreateGpNotesComponent(props) {
   const {
+    classes,
     createNote,
     noteSubmitting,
     noteError,
@@ -127,6 +137,17 @@ function PatientCreateGpNotesComponent(props) {
     currentPatientLoading,
     currentPatientError
   } = props;
+
+  const [showModal, setShowModal] = useState(false);
+  const [isSubmitting, setSubmitting] = useState(!!noteSubmitting);
+  useEffect(() => {
+    if (isSubmitting && !noteSubmitting && !noteError) {
+      setShowModal(true);
+    }
+    if (noteSubmitting !== isSubmitting) {
+      setSubmitting(noteSubmitting);
+    }
+  }, [isSubmitting, noteError, noteSubmitting]);
 
   // TEXT
   const [carePlan, setPlan] = useState("");
@@ -317,8 +338,39 @@ function PatientCreateGpNotesComponent(props) {
           </pre>
         )}
       </form>
+
+      <Modal
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+        open={showModal}
+        onClose={() => setShowModal(false)}
+      >
+        <div style={getModalStyles()} className={classes.paper}>
+          <Typography variant="h6" id="modal-title" gutterBottom>
+            Success!
+          </Typography>
+          <Typography gutterBottom>Your notes have been submitted.</Typography>
+
+          <br />
+          <br />
+          <Button variant="contained" color="primary" component={Link} to={`/patient/${patientId}`}>
+            Back to patient
+          </Button>
+        </div>
+      </Modal>
     </StandardLayout>
   );
+}
+
+function getModalStyles() {
+  const top = 50;
+  const left = 50;
+
+  return {
+    top: `${top}%`,
+    left: `${left}%`,
+    transform: `translate(-${top}%, -${left}%)`
+  };
 }
 
 PatientCreateGpNotesComponent.propTypes = {
