@@ -7,6 +7,7 @@ it("Should transform the notes into a composition", () => {
       medicationRequest: "medicationRequest",
       procedure: "procedure",
       clinicalImpression: "clinicalImpression",
+      currentPatient: { birthDate: "1000000", nhi: "nhi", vcareId: "vcareId" },
       notes: [
         {
           text: "asdfasdfasdf"

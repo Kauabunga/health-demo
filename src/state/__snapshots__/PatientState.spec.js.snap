@@ -18,6 +18,8 @@ Object {
     "phone": undefined,
     "relationship": "First Next-of-Kin (Son)",
   },
+  "nhi": "ZBP8438",
   "photo": "",
+  "vcareId": "2143.19",
 }
 `;

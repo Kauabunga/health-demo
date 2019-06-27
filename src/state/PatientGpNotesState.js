@@ -17,7 +17,6 @@ class PatientGpNotesState {
     this.noteError = null;
 
     try {
-      await wait(1000);
       const result = await createGpNote(note);
       console.log("GP NOTE Success", result);
     } catch (error) {
@@ -52,6 +51,8 @@ async function createGpNote(note) {
   const Authorization = `Bearer ${id_token}`;
   const url = `${base_uri}${base_path_composition}`;
 
+  console.log("GP NOTES COMPOSITION", composition);
+
   try {
     const response = await axios.post(url, composition, {
       headers: {
@@ -81,7 +82,7 @@ async function createGpNote(note) {
  * MEGA FUNCTION
  */
 export function transformNotes(note, date) {
-  const { patient, carePlan, clinicalImpression, medicationRequest, procedure, notes } = note || {};
+  const { currentPatient, carePlan, clinicalImpression, medicationRequest, procedure, notes } = note || {};
 
   const TRANSFORMATION_NAMESPACE = "1b671a64-40d5-491e-99b0-da01ff1f3341";
 
@@ -149,7 +150,7 @@ export function transformNotes(note, date) {
     ]
   };
 
-  console.log(patient);
+  const { birthDate, vcareId, nhi } = currentPatient;
 
   const patientId = uuidv5("patient", TRANSFORMATION_NAMESPACE);
   const patientResource = {
@@ -159,15 +160,15 @@ export function transformNotes(note, date) {
       {
         use: "secondary",
         system: "http://rymanhealthcare.co.nz",
-        value: "2143.5"
+        value: vcareId
       },
       {
         use: "official",
         system: "http://health.govt.nz/nhi",
-        value: "ZGD5674"
+        value: nhi
       }
     ],
-    birthDate: "1912-11-10"
+    birthDate
   };
 
   const contained = []
@@ -232,10 +233,6 @@ export function transformNotes(note, date) {
       reference: `#${organizationId}`
     }
   };
-}
-
-async function wait(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms || 500));
 }
 
 // eslint-disable-next-line

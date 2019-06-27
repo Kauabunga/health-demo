@@ -257,8 +257,13 @@ export function transformPatient(patient) {
   // MARITAL STATUS
   const maritalStatus = patient.maritalStatus && patient.maritalStatus.text;
 
+  const officialIdentifier = (patient.identifier || []).find(({ use }) => use === "official");
+  const secondaryIdentifier = (patient.identifier || []).find(({ use }) => use === "secondary");
+
   // RESULT
   return {
+    nhi: officialIdentifier && officialIdentifier.value,
+    vcareId: secondaryIdentifier && secondaryIdentifier.value,
     name: fullOfficialName,
     initials: formattedInitials,
     email,

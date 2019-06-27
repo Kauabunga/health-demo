@@ -15,6 +15,10 @@ import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { red } from "@material-ui/core/colors";
+import IconButton from "@material-ui/core/IconButton";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
 
 import StandardLayout from "../layout/StandardLayout";
 import DelayComponent from "./DelayComponent";
@@ -184,9 +188,11 @@ function PatientDetailComponent(props) {
 
           <div style={{ flexGrow: 1 }}></div>
 
-          <Button color="primary" variant="contained" component={Link} to={`/patient/${patientId}/notes`}>
+          <Button color="primary" variant="outlined" component={Link} to={`/patient/${patientId}/notes`}>
             Add Consultation Note
           </Button>
+
+          <LongMenu patientId={patientId} />
         </Grid>
       )}
 
@@ -223,3 +229,46 @@ PatientDetailComponent.propTypes = {
 };
 
 export default withStyles(rootStyles)(PatientDetailComponent);
+
+function LongMenu({ patientId }) {
+  const ITEM_HEIGHT = 48;
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+
+  function handleClick(event) {
+    setAnchorEl(event.currentTarget);
+  }
+
+  function handleClose() {
+    setAnchorEl(null);
+  }
+
+  return (
+    <div>
+      <IconButton aria-label="More" aria-controls="long-menu" aria-haspopup="true" onClick={handleClick}>
+        <MoreVertIcon />
+      </IconButton>
+      <Menu
+        id="long-menu"
+        anchorEl={anchorEl}
+        keepMounted
+        open={open}
+        onClose={handleClose}
+        PaperProps={{
+          style: {
+            maxHeight: ITEM_HEIGHT * 4.5,
+            width: 240
+          }
+        }}
+      >
+        <MenuItem component={Link} to={`/patient/${patientId}/transfer-pack`} onClick={handleClose}>
+          Create Transfer Pack
+        </MenuItem>
+        <MenuItem component={Link} to={`/patient/${patientId}/discharge`} onClick={handleClose}>
+          Create Discharge Summary
+        </MenuItem>
+      </Menu>
+    </div>
+  );
+}

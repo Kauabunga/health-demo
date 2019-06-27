@@ -220,7 +220,14 @@ function PatientCreateGpNotesComponent(props) {
         <br />
 
         {currentPatient && (
-          <Grid container direction="row" alignItems="center" style={{ marginBottom: 12 }}>
+          <Grid
+            component={Link}
+            to={`/patient/${patientId}`}
+            container
+            direction="row"
+            alignItems="center"
+            style={{ textDecoration: "none", color: "inherit", marginBottom: 12 }}
+          >
             {(currentPatient && currentPatient.photo && (
               <Avatar alt={currentPatient.name} src={currentPatient.photo} />
             )) || <Avatar>{currentPatient.initials}</Avatar>}

@@ -14,6 +14,8 @@ import HomeContainer from "./containers/HomeContainer";
 import PatientContainer from "./containers/PatientContainer";
 import PatientGpNotesContainer from "./containers/PatientGpNotesContainer";
 import PatientObservationContainer from "./containers/PatientObservationContainer";
+import PatientTransferPackContainer from "./containers/PatientTransferPackContainer";
+import PatientDischargeSummaryContainer from "./containers/PatientDischargeSummaryContainer";
 
 import NavigationComponent from "./components/NavigationComponent";
 import HomeComponent from "./components/HomeComponent";
@@ -22,6 +24,8 @@ import LoginComponent from "./components/LoginComponent";
 import PatientDetailComponent from "./components/PatientDetailComponent";
 import PatientObservationComponent from "./components/PatientObservationComponent";
 import PatientCreateGpNotesComponent from "./components/PatientCreateGpNotesComponent";
+import PatientCreateDischargeComponent from "./components/PatientCreateDischargeComponent";
+import PatientCreateTransferPackComponent from "./components/PatientCreateTransferPackComponent";
 
 import { theme } from "./Theme";
 
@@ -93,6 +97,7 @@ export default () => (
               );
             }}
           />
+
           <PrivateRoute
             path="/patient/:patientId/notes"
             component={({ match }) => {
@@ -108,6 +113,47 @@ export default () => (
               );
             }}
           />
+
+          <PrivateRoute
+            path="/patient/:patientId/transfer-pack"
+            component={({ match }) => {
+              const { params } = match;
+              const { patientId } = params;
+              return (
+                <PatientContainer
+                  patientId={patientId}
+                  Layout={props => (
+                    <PatientTransferPackContainer
+                      patientId={patientId}
+                      {...props}
+                      Layout={PatientCreateTransferPackComponent}
+                    />
+                  )}
+                />
+              );
+            }}
+          />
+
+          <PrivateRoute
+            path="/patient/:patientId/discharge"
+            component={({ match }) => {
+              const { params } = match;
+              const { patientId } = params;
+              return (
+                <PatientContainer
+                  patientId={patientId}
+                  Layout={props => (
+                    <PatientDischargeSummaryContainer
+                      patientId={patientId}
+                      {...props}
+                      Layout={PatientCreateDischargeComponent}
+                    />
+                  )}
+                />
+              );
+            }}
+          />
+
           <PublicOnlyRoute
             path="/auth-error/:message"
             component={({ match }) => {
