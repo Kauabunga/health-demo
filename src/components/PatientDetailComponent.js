@@ -188,7 +188,13 @@ function PatientDetailComponent(props) {
 
           <div style={{ flexGrow: 1 }}></div>
 
-          <Button color="primary" variant="outlined" component={Link} to={`/patient/${patientId}/notes`}>
+          <Button
+            style={{ marginRight: 12 }}
+            color="primary"
+            variant="outlined"
+            component={Link}
+            to={`/patient/${patientId}/notes`}
+          >
             Add Consultation Note
           </Button>
 
