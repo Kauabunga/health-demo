@@ -48,10 +48,21 @@ async function createTransferPack(transferPack) {
   const Authorization = `Bearer ${id_token}`;
   const url = `${base_uri}${base_path_transferpack}`;
 
+  const { currentPatient } = transferPack;
+  const { vcareId } = currentPatient;
+
   try {
     const response = await axios.post(
       url,
-      {},
+      {
+        residentId: vcareId,
+        reasonForTransfer: "REASON FOR TRANSFER",
+        requestedBy: {
+          name: "RequestedByName",
+          position: "RequestedByPosition"
+        },
+        routineBloodTestingOrMedicalProcedures: "routineBloodTestingOrMedicalProcedures"
+      },
       {
         headers: {
           "Content-Type": "application/json",
