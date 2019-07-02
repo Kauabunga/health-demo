@@ -229,24 +229,22 @@ export function transformPatient(patient) {
   const formattedInitials = ((initials.shift() || "") + (initials.pop() || "")).toUpperCase();
 
   // NEXT OF KIN
-  const nextOfKinContact = contact.find(
-    ({ relationship }) => !!relationship.find(({ coding }) => !!coding.find(({ code }) => code === "N"))
-  );
-  const nextOfKinName =
-    nextOfKinContact &&
-    nextOfKinContact.name &&
-    nextOfKinContact.name.given.concat(nextOfKinContact.name.family).join(" ");
-  const nextOfKinPhone = nextOfKinContact && nextOfKinContact.telecom.find(({ system }) => system === "phone");
-  const nextOfKinEmail = nextOfKinContact && nextOfKinContact.telecom.find(({ system }) => system === "email");
-  const nextOfKinGender = nextOfKinContact && nextOfKinContact.gender;
-  const nextOfKinRelationship = nextOfKinContact && nextOfKinContact.relationship.map(({ text }) => text).join(", ");
-  const nextOfKin = {
-    name: nextOfKinName,
-    phone: nextOfKinPhone && nextOfKinPhone.value,
-    email: nextOfKinEmail && nextOfKinEmail.value,
-    gender: nextOfKinGender,
-    relationship: nextOfKinRelationship
-  };
+  const nextOfKinContact = contact;
+  const nextOfKins = nextOfKinContact.map(currentKin => {
+    const nextOfKinName =
+      currentKin && currentKin.name && currentKin.name.given.concat(currentKin.name.family).join(" ");
+    const nextOfKinPhone = currentKin && currentKin.telecom.find(({ system }) => system === "phone");
+    const nextOfKinEmail = currentKin && currentKin.telecom.find(({ system }) => system === "email");
+    const nextOfKinGender = currentKin && currentKin.gender;
+    const nextOfKinRelationship = currentKin && currentKin.relationship.map(({ text }) => text).join(", ");
+    return {
+      name: nextOfKinName,
+      phone: nextOfKinPhone && nextOfKinPhone.value,
+      email: nextOfKinEmail && nextOfKinEmail.value,
+      gender: nextOfKinGender,
+      relationship: nextOfKinRelationship
+    };
+  });
 
   // EXTENSIONS
   const carePlanExtension = extension.find(({ valueCoding }) => valueCoding && valueCoding.code === "R-D1");
@@ -276,7 +274,7 @@ export function transformPatient(patient) {
     maritalStatus,
     ethnicity,
 
-    nextOfKin,
+    nextOfKins,
 
     __original__: patient
   };

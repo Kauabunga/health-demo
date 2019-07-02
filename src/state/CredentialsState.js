@@ -31,7 +31,7 @@ class CredentialsState {
   client_id = store.get("client_id") || "";
   client_secret = store.get("client_secret") || "";
 
-  base_uri = store.get("base_uri") || "https://apac-syd-partner02-test.apigee.net";
+  base_uri = store.get("base_uri") || "https://rymanhealthcare-dev.apigee.net";
   base_path_oauth = store.get("base_path_oauth") || "/ryman-oauth/token";
   base_path_patient = store.get("base_path_patient") || "/fhir4-0-0/Patient";
   base_path_observation = store.get("base_path_observation") || "/fhir4-0-0/Observation";

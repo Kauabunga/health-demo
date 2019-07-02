@@ -56,6 +56,9 @@ const DetailItem = ({ label, value }) => (
 const DetailGroup = ({ label, items, labelProp, value }) => {
   const classesExpansionPanel = useExpansionPanelStyles();
   const classesExpansionPanelSummary = useExpansionPanelSummaryStyles();
+
+  const labelProps = [].concat(labelProp);
+  const labelValue = labelProps.map(prop => value[prop]).join(" - ");
   return (
     <Grid item>
       <ExpansionPanel classes={classesExpansionPanel}>
@@ -65,7 +68,7 @@ const DetailGroup = ({ label, items, labelProp, value }) => {
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
-          <DetailItem label={label} value={value[labelProp]} />
+          <DetailItem label={label} value={labelValue} />
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
           <Grid container direction="column">
@@ -86,41 +89,50 @@ const DetailPatient = ({ currentPatient }) => (
   <Grid item style={{ paddingRight: 24 }}>
     <DetailItem label="Name" value={currentPatient.name} />
     <Divider style={{ marginTop: 12, marginBottom: 12 }} />
-
     <DetailItem label="Email" value={currentPatient.email} />
     <Divider style={{ marginTop: 12, marginBottom: 12 }} />
-
     <DetailItem label="Address" value={currentPatient.address} />
     <Divider style={{ marginTop: 12, marginBottom: 12 }} />
-
     <DetailItem label="Birth date" value={currentPatient.birthDate} />
     <Divider style={{ marginTop: 12, marginBottom: 12 }} />
-
     <DetailItem label="Gender" value={currentPatient.gender} />
     <Divider style={{ marginTop: 12, marginBottom: 12 }} />
-
     <DetailItem label="Marital status" value={currentPatient.maritalStatus} />
     <Divider style={{ marginTop: 12, marginBottom: 12 }} />
-
     <DetailItem label="Ethnicity" value={currentPatient.ethnicity} />
     <Divider style={{ marginTop: 12, marginBottom: 12 }} />
-
     <DetailItem label="Care plan" value={currentPatient.carePlan} />
     <Divider style={{ marginTop: 12, marginBottom: 12 }} />
-
-    <DetailGroup
-      label="Next of kin"
-      labelProp="name"
-      items={[
-        { label: "Phone", key: "phone" },
-        { label: "Email", key: "email" },
-        { label: "Gender", key: "gender" },
-        { label: "Relationship", key: "relationship" }
-      ]}
-      value={currentPatient.nextOfKin}
-    />
+    {(currentPatient.nextOfKins || []).map(nextOfKin => (
+      <DetailGroup
+        key={nextOfKin && nextOfKin.name}
+        label="Relationship"
+        labelProp={["name", "relationship"]}
+        items={[
+          { label: "Name", key: "name" },
+          { label: "Phone", key: "phone" },
+          { label: "Email", key: "email" },
+          { label: "Gender", key: "gender" },
+          { label: "Relationship", key: "relationship" }
+        ]}
+        value={nextOfKin}
+      />
+    ))}
   </Grid>
 );
+
+const DetailDiagnoses = ({ notes }) => {
+  return (
+    <Grid item style={{ flexGrow: 1, flexShrink: 0, maxWidth: 380 }}>
+      <Typography variant="h6">Conditions</Typography>
+      {(notes || []).map(({ id, text }) => (
+        <Grid key={id || text} style={{ marginBottom: 12, padding: 12 }}>
+          <Typography>{text || "unknown"}</Typography>
+        </Grid>
+      ))}
+    </Grid>
+  );
+};
 
 const DetailNotes = ({ notes: defaultNotes }) => {
   const handleNoteSubmit = e => e.preventDefault();
@@ -211,7 +223,7 @@ function PatientDetailComponent(props) {
               patientId={patientId}
               Layout={({ currentPatientCondition }) => {
                 const { notes } = currentPatientCondition || {};
-                return (currentPatientCondition && <DetailNotes notes={notes} />) || <CircularProgress />;
+                return (currentPatientCondition && <DetailDiagnoses notes={notes} />) || <CircularProgress />;
               }}
             />
           </Grid>
