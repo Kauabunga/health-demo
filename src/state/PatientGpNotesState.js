@@ -186,12 +186,11 @@ export function transformNotes(note, date) {
   const sectionCodes = {
     CarePlan: makeCode("18776-5"),
     Procedure: makeCode("29554-3"),
-    Condition: makeCode("51848-0"),
     Observation: makeCode("8716-3"),
     MedicationRequest: makeCode("18776-5"),
-    ClinicalImpression: makeCode("29545-1")
+    ClinicalImpression: makeCode("51848-0")
   };
-  const sectionResourceTypes = ["CarePlan", "Procedure", "Condition", "Observation", "MedicationRequest"];
+  const sectionResourceTypes = ["CarePlan", "Procedure", "Observation", "MedicationRequest"];
   const containedGroupedByResource = contained
     .filter(({ resourceType }) => sectionResourceTypes.includes(resourceType))
     .reduce(
