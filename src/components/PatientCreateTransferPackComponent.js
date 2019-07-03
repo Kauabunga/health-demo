@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
+import TextField from "@material-ui/core/TextField";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Divider from "@material-ui/core/Divider";
 import Grid from "@material-ui/core/Grid";
@@ -43,6 +44,9 @@ function PatientCreateTransferPack(props) {
     currentPatientError
   } = props;
 
+  const [routineBloodTestingOrMedicalProcedures, setRoutine] = useState("");
+  const [reasonForTransfer, setReasonForTransfer] = useState("");
+
   const [showModal, setShowModal] = useState(false);
   const [isSubmitting, setSubmitting] = useState(!!transferPackSubmitting);
   useEffect(() => {
@@ -62,7 +66,9 @@ function PatientCreateTransferPack(props) {
     }
 
     const values = {
-      currentPatient
+      currentPatient,
+      reasonForTransfer,
+      routineBloodTestingOrMedicalProcedures
     };
 
     createTransferPack(values);
@@ -107,6 +113,35 @@ function PatientCreateTransferPack(props) {
         )}
 
         <br />
+        <Typography variant="h6" gutterBottom>
+          Reason
+        </Typography>
+        <TextField
+          value={reasonForTransfer}
+          onChange={e => setReasonForTransfer(e.target.value)}
+          variant="outlined"
+          label="Enter the reason for the transfer"
+          multiline
+          type="textarea"
+          rows={4}
+          fullWidth
+        />
+
+        <br />
+        <br />
+        <Typography variant="h6" gutterBottom>
+          Routine
+        </Typography>
+        <TextField
+          value={routineBloodTestingOrMedicalProcedures}
+          onChange={e => setRoutine(e.target.value)}
+          variant="outlined"
+          label="Describe any routine blood testing or medical procedures"
+          multiline
+          rows={4}
+          type="textarea"
+          fullWidth
+        />
 
         <Button
           type="submit"

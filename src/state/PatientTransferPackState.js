@@ -48,7 +48,7 @@ async function createTransferPack(transferPack) {
   const Authorization = `Bearer ${id_token}`;
   const url = `${base_uri}${base_path_transferpack}`;
 
-  const { currentPatient } = transferPack;
+  const { currentPatient, reasonForTransfer, routineBloodTestingOrMedicalProcedures } = transferPack;
   const { vcareId } = currentPatient;
 
   try {
@@ -56,12 +56,12 @@ async function createTransferPack(transferPack) {
       url,
       {
         residentId: vcareId,
-        reasonForTransfer: "REASON FOR TRANSFER",
+        reasonForTransfer,
         requestedBy: {
-          name: "RequestedByName",
-          position: "RequestedByPosition"
+          name: "Demo Name",
+          position: "Demo Position"
         },
-        routineBloodTestingOrMedicalProcedures: "routineBloodTestingOrMedicalProcedures"
+        routineBloodTestingOrMedicalProcedures
       },
       {
         headers: {

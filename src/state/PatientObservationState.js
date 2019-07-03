@@ -5,7 +5,7 @@ import qs from "qs";
 
 import { credentialsStore } from "./CredentialsState";
 import { authStore } from "./AuthState";
-import { addDays } from "date-fns";
+import { format, addDays } from "date-fns";
 
 class PatientObservationState {
   patientObservationLoading = {};
@@ -68,8 +68,8 @@ async function getPatientObservation(patientId, start, end) {
   const Authorization = `Bearer ${id_token}`;
   const url = `${base_uri}${base_path_observation}?${qs.stringify({
     "subject.patient._id": patientId,
-    "effective.period.start": start.substring(0, "XXXX-XX-XX".length),
-    "effective.period.end": end.substring(0, "XXXX-XX-XX".length)
+    "effective.period.start": format(new Date(start), "yyyy-MM-dd"),
+    "effective.period.end": format(new Date(end), "yyyy-MM-dd")
   })}`;
 
   try {
