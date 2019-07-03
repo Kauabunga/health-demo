@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
@@ -8,7 +8,6 @@ import Avatar from "@material-ui/core/Avatar";
 import Card from "@material-ui/core/Card";
 import Divider from "@material-ui/core/Divider";
 import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
@@ -130,46 +129,6 @@ const DetailDiagnoses = ({ notes }) => {
           <Typography>{text || "unknown"}</Typography>
         </Grid>
       ))}
-    </Grid>
-  );
-};
-
-const DetailNotes = ({ notes: defaultNotes }) => {
-  const handleNoteSubmit = e => e.preventDefault();
-
-  const [currentNote, updateCurrentNote] = useState("");
-  const [notes, updateNotes] = useState(defaultNotes || []);
-
-  const handleNoteChange = e => updateCurrentNote(e.target.value);
-  const handleAddNote = () => {
-    updateCurrentNote("");
-    updateNotes([...notes, { text: currentNote }]);
-  };
-
-  return (
-    <Grid item style={{ flexGrow: 1, flexShrink: 0, maxWidth: 380 }}>
-      <Grid container direction="column">
-        {(notes || []).map(({ id, text }) => (
-          <Card key={id || text} style={{ marginBottom: 12, padding: 12 }}>
-            <Typography>{text || "unknown"}</Typography>
-          </Card>
-        ))}
-
-        <form onSubmit={handleNoteSubmit}>
-          <TextField
-            value={currentNote}
-            onChange={handleNoteChange}
-            variant="outlined"
-            label="Enter a note for the patient"
-            multiline
-            type="textarea"
-            fullWidth
-          />
-          <Button style={{ marginTop: 12 }} variant="outlined" onClick={handleAddNote}>
-            Add note
-          </Button>
-        </form>
-      </Grid>
     </Grid>
   );
 };

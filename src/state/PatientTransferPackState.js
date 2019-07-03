@@ -76,7 +76,7 @@ async function createTransferPack(transferPack) {
 
     console.log("TRANFERPACK RESPONSE", status, data);
 
-    if (status !== 201) {
+    if (status !== 202) {
       throw new Error(`Invalid status ${status}`);
     }
 
