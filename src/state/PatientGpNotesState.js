@@ -113,7 +113,7 @@ export function transformNotes(note, date) {
   };
 
   const clinicalImpressionResource = clinicalImpression && {
-    resourceType: "Procedure",
+    resourceType: "ClinicalImpression",
     id: uuidv5(clinicalImpression, TRANSFORMATION_NAMESPACE),
     text: {
       div: renderDiv(clinicalImpression)
@@ -190,7 +190,7 @@ export function transformNotes(note, date) {
     MedicationRequest: makeCode("18776-5"),
     ClinicalImpression: makeCode("51848-0")
   };
-  const sectionResourceTypes = ["CarePlan", "Procedure", "Observation", "MedicationRequest"];
+  const sectionResourceTypes = ["CarePlan", "Procedure", "Observation", "MedicationRequest", "ClinicalImpression"];
   const containedGroupedByResource = contained
     .filter(({ resourceType }) => sectionResourceTypes.includes(resourceType))
     .reduce(

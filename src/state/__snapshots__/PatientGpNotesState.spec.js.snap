@@ -51,7 +51,7 @@ Object {
     },
     Object {
       "id": "7cc25735-29d2-51b3-9e65-bc2b10cc2137",
-      "resourceType": "Procedure",
+      "resourceType": "ClinicalImpression",
       "text": Object {
         "div": "<div xmlns=\\"http://www.w3.org/1999/xhtml\\">clinicalImpression</div>",
       },
@@ -141,15 +141,26 @@ Object {
       "code": Object {
         "coding": Array [
           Object {
-            "code": "29554-3",
+            "code": "51848-0",
           },
         ],
       },
       "entry": Array [
         Object {
           "reference": "#7cc25735-29d2-51b3-9e65-bc2b10cc2137",
-          "type": "Procedure",
+          "type": "ClinicalImpression",
         },
+      ],
+    },
+    Object {
+      "code": Object {
+        "coding": Array [
+          Object {
+            "code": "29554-3",
+          },
+        ],
+      },
+      "entry": Array [
         Object {
           "reference": "#573e4900-ae11-5e44-917c-6f5a867441ff",
           "type": "Procedure",
