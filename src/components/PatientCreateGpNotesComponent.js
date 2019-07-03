@@ -245,8 +245,8 @@ function PatientCreateGpNotesComponent(props) {
               Examination
             </Typography>
             <TextField
-              value={procedure}
-              onChange={e => setProcedure(e.target.value)}
+              value={clinicalImpression}
+              onChange={e => setClinicalImpression(e.target.value)}
               variant="outlined"
               label="Enter your assessment of the patient’s condition and diagnoses"
               multiline
@@ -261,8 +261,8 @@ function PatientCreateGpNotesComponent(props) {
               Actions
             </Typography>
             <TextField
-              value={clinicalImpression}
-              onChange={e => setClinicalImpression(e.target.value)}
+              value={procedure}
+              onChange={e => setProcedure(e.target.value)}
               variant="outlined"
               label="Describe any procedures or actions taken during the consultation"
               multiline

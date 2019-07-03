@@ -2,6 +2,7 @@ import React from "react";
 import { decorate, observable, action } from "mobx";
 import uuidv5 from "uuid/v5";
 import axios from "axios";
+import { format } from "date-fns";
 
 import { credentialsStore } from "./CredentialsState";
 import { authStore } from "./AuthState";
@@ -53,8 +54,7 @@ async function createDischargeSummary(dischargeSummary) {
 
     console.log("Creating dischargeSummary", composition, dischargeSummary);
 
-    const response = await axios.post(url, getExample(), {
-      // const response = await axios.post(url, composition, {
+    const response = await axios.post(url, composition, {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
@@ -81,9 +81,14 @@ async function createDischargeSummary(dischargeSummary) {
  * MEGA FUNCTION
  * MEGA FUNCTION
  * MEGA FUNCTION
+ *
+ *
  */
 export async function transformSummary(summary, date) {
   const { currentPatient, pdf, summary: summaryText } = summary || {};
+
+  const d = format(new Date(), "yyyy-MM-dd", { awareOfUnicodeTokens: false });
+  const time = format(new Date(), "HH:mm:ss+12:00", { awareOfUnicodeTokens: false });
 
   const TRANSFORMATION_NAMESPACE = "1b671a64-40d5-491e-99b0-da01ff1f3341";
 
@@ -121,7 +126,8 @@ export async function transformSummary(summary, date) {
           data: base64file,
           size: base64length,
           title: "Scanned Discharge Summary",
-          creation: date || new Date().toISOString()
+          // creation: date || new Date().toISOString()
+          creation: date || `${d}T${time}`
         },
         format: {
           system: "http://ihe.net/fhir/ValueSet/IHE.FormatCode.codesystem",
@@ -217,7 +223,8 @@ export async function transformSummary(summary, date) {
     resourceType: "Composition",
     status: "final",
     title: "Discharge summary",
-    date: date || new Date().toISOString(),
+    // date: date || new Date().toISOString(),
+    date: date || `${d}T${time}`,
     contained,
     section,
     identifier: {

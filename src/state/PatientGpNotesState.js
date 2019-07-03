@@ -2,6 +2,7 @@ import React from "react";
 import { decorate, observable, action } from "mobx";
 import uuidv5 from "uuid/v5";
 import axios from "axios";
+import { format } from "date-fns";
 
 import { credentialsStore } from "./CredentialsState";
 import { authStore } from "./AuthState";
@@ -85,6 +86,9 @@ export function transformNotes(note, date) {
   const { currentPatient, carePlan, clinicalImpression, medicationRequest, procedure, notes } = note || {};
 
   const TRANSFORMATION_NAMESPACE = "1b671a64-40d5-491e-99b0-da01ff1f3341";
+
+  const d = format(new Date(), "yyyy-MM-dd", { awareOfUnicodeTokens: false });
+  const time = format(new Date(), "HH:mm:ss+12:00", { awareOfUnicodeTokens: false });
 
   const renderDiv = content => `<div xmlns="http://www.w3.org/1999/xhtml">${content}</div>`;
 
@@ -207,7 +211,8 @@ export function transformNotes(note, date) {
     resourceType: "Composition",
     status: "final",
     title: "GP notes",
-    date: date || new Date().toISOString(),
+    // date: date || new Date().toISOString(),
+    date: date || `${d}T${time}`,
     contained,
     section,
     identifier: {
