@@ -163,7 +163,12 @@ async function searchPatient(id, birthdate) {
     return null;
   }
 
-  const params = { identifier: `http://health.govt.nz/nhi|${id}`, birthdate, _format: "json" };
+  const params = {
+    identifier: `http://health.govt.nz/nhi|${String(id).trim()}`,
+    birthdate: String(birthdate).trim(),
+    _format: "json"
+  };
+
   const Authorization = `Bearer ${id_token}`;
   const url = `${base_uri}${base_path_patient}/_search?${qs.stringify(params)}`;
 
