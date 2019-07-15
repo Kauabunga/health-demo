@@ -105,8 +105,8 @@ const DetailPatient = ({ currentPatient }) => (
     {(currentPatient.nextOfKins || []).map(nextOfKin => (
       <DetailGroup
         key={nextOfKin && nextOfKin.name}
-        label="Relationship"
-        labelProp={["name", "relationship"]}
+        label="Contact"
+        labelProp={["name"]}
         items={[
           { label: "Name", key: "name" },
           { label: "Phone", key: "phone" },

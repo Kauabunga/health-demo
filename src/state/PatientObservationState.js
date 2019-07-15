@@ -109,7 +109,7 @@ function transformPatientObservation(patientObservation) {
 
     return {
       id: index,
-      code: code && code.text,
+      code: code && code.coding && code.coding[0] && code.coding[0].display,
       categories,
       interpretations,
       issued,
