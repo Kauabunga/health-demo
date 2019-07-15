@@ -179,9 +179,9 @@ function HomeComponent({
                       <CircularProgress />
                     </DelayComponent>
                   ) : (
-                    (currentPatient.photo && <Avatar alt={currentPatient.name} src={currentPatient.photo} />) || (
-                      <Avatar>{currentPatient.initials}</Avatar>
-                    )
+                    (currentPatient && currentPatient.photo && (
+                      <Avatar alt={currentPatient.name} src={currentPatient.photo} />
+                    )) || <Avatar>{currentPatient.initials}</Avatar>
                   )}
                 </ListItemAvatar>
 

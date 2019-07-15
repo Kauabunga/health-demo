@@ -235,7 +235,7 @@ export function transformPatient(patient) {
 
   // NEXT OF KIN
   const nextOfKinContact = contact;
-  const nextOfKins = nextOfKinContact.map(currentKin => {
+  const nextOfKins = (nextOfKinContact || []).map(currentKin => {
     const nextOfKinName =
       currentKin && currentKin.name && currentKin.name.given.concat(currentKin.name.family).join(" ");
     const nextOfKinPhone = currentKin && currentKin.telecom.find(({ system }) => system === "phone");
@@ -252,9 +252,9 @@ export function transformPatient(patient) {
   });
 
   // EXTENSIONS
-  const carePlanExtension = extension.find(({ valueCoding }) => valueCoding && valueCoding.code === "R-D1");
+  const carePlanExtension = extension.find(({ url }) => url && url.includes("CareLevel"));
   const carePlan = carePlanExtension && carePlanExtension.valueCoding.display;
-  const ethnicityExtension = extension.find(({ valueCoding }) => valueCoding && valueCoding.code === "11");
+  const ethnicityExtension = extension.find(({ url }) => url && url.includes("Ethnicities"));
   const ethnicity = ethnicityExtension && ethnicityExtension.valueCoding.display;
 
   // MARITAL STATUS

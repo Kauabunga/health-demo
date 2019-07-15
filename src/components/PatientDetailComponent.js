@@ -100,7 +100,7 @@ const DetailPatient = ({ currentPatient }) => (
     <Divider style={{ marginTop: 12, marginBottom: 12 }} />
     <DetailItem label="Ethnicity" value={currentPatient.ethnicity} />
     <Divider style={{ marginTop: 12, marginBottom: 12 }} />
-    <DetailItem label="Care plan" value={currentPatient.carePlan} />
+    <DetailItem label="Care level" value={currentPatient.carePlan} />
     <Divider style={{ marginTop: 12, marginBottom: 12 }} />
     {(currentPatient.nextOfKins || []).map(nextOfKin => (
       <DetailGroup

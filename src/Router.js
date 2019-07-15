@@ -45,12 +45,10 @@ const Interceptor = withRouter(function(props, context) {
         console.log("ERROR INTERCEPTOR", error.status);
 
         if (error.response) {
-          // TODO: 401/403 are valid for some api cases e.g. observations
           switch (error.response.status) {
             case 401:
-            case 403:
-              // authStore.updateSession(null);
-              // props.history.push(`/auth-error/${error.response.status}`);
+              authStore.updateSession(null);
+              props.history.push(`/auth-error/${error.response.status}`);
               return;
             default:
               return;
