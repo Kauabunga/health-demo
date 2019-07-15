@@ -43,10 +43,10 @@ const useExpansionPanelSummaryStyles = makeStyles(theme => ({
   }
 }));
 
-const DetailItem = ({ label, value }) => (
+const DetailItem = ({ label, value, noWrap }) => (
   <Grid item>
     <Typography>{label}</Typography>
-    <Typography variant="subtitle1" style={{ fontWeight: 700 }} noWrap>
+    <Typography variant="subtitle1" style={{ fontWeight: 700 }} noWrap={noWrap}>
       {value || "unknown"}
     </Typography>
   </Grid>
@@ -73,7 +73,7 @@ const DetailGroup = ({ label, items, labelProp, value }) => {
           <Grid container direction="column">
             {items.map(item => (
               <Fragment>
-                <DetailItem label={item.label} value={value[item.key]} />
+                <DetailItem label={item.label} noWrap={item.noWrap} value={value[item.key]} />
                 <Divider style={{ marginTop: 12, marginBottom: 12 }} />
               </Fragment>
             ))}
@@ -88,7 +88,7 @@ const DetailPatient = ({ currentPatient }) => (
   <Grid item style={{ paddingRight: 24 }}>
     <DetailItem label="Name" value={currentPatient.name} />
     <Divider style={{ marginTop: 12, marginBottom: 12 }} />
-    <DetailItem label="Email" value={currentPatient.email} />
+    <DetailItem label="Email" value={currentPatient.email} noWrap />
     <Divider style={{ marginTop: 12, marginBottom: 12 }} />
     <DetailItem label="Address" value={currentPatient.address} />
     <Divider style={{ marginTop: 12, marginBottom: 12 }} />
@@ -109,7 +109,7 @@ const DetailPatient = ({ currentPatient }) => (
         labelProp={["name"]}
         items={[
           { label: "Name", key: "name" },
-          { label: "Phone", key: "phone" },
+          { label: "Phone", key: "phone", noWrap: true },
           { label: "Email", key: "email" },
           { label: "Gender", key: "gender" },
           { label: "Relationship", key: "relationship" }
