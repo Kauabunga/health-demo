@@ -1,37 +1,37 @@
-import React, { Fragment } from "react";
-import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
-import { withStyles } from "@material-ui/core/styles";
-import Grid from "@material-ui/core/Grid";
-import Card from "@material-ui/core/Card";
-import TextField from "@material-ui/core/TextField";
-import Divider from "@material-ui/core/Divider";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import { red } from "@material-ui/core/colors";
+import React, { Fragment } from 'react';
+import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
+import { withStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
+import Card from '@material-ui/core/Card';
+import TextField from '@material-ui/core/TextField';
+import Divider from '@material-ui/core/Divider';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { red } from '@material-ui/core/colors';
 
-import DelayComponent from "./DelayComponent";
-import PatientContainer from "../containers/PatientContainer";
-import StandardLayout from "../layout/StandardLayout";
+import DelayComponent from './DelayComponent';
+import PatientContainer from '../containers/PatientContainer';
+import StandardLayout from '../layout/StandardLayout';
 
 const testIds = [
-  { id: "ZRA6853", dob: "1949-07-13" },
-  { id: "ZGL5346", dob: "1931-08-18" },
-  { id: "ZJP8740", dob: "1924-03-19" },
-  { id: "ZCF1582", dob: "1908-03-08" }
+  { id: 'ZRA6853', dob: '1949-07-13' },
+  { id: 'ZGL5346', dob: '1931-08-18' },
+  { id: 'ZJP8740', dob: '1924-03-19' },
+  { id: 'ZCF1582', dob: '1908-03-08' }
 ];
 
-const testPatients = [{ id: "2143.1" }, { id: "2143.19" }];
+const testPatients = [{ id: '2143.1' }, { id: '2143.19' }];
 
 const styles = {
   list: {
-    margin: "24px 0 48px"
+    margin: '24px 0 48px'
   },
   listItem: {
     height: 96
@@ -71,7 +71,7 @@ function HomeComponent({
         Welcome
       </Typography>
       <form onSubmit={handleSubmit}>
-        <Card style={{ padding: 24, minHeight: "42vh" }}>
+        <Card style={{ padding: 24, minHeight: '42vh' }}>
           <Grid container wrap="nowrap">
             <Grid container direction="column" style={{ marginRight: 24 }}>
               <Typography variant="subtitle1" gutterBottom>
@@ -99,7 +99,7 @@ function HomeComponent({
               </Grid>
               <div>
                 <Button style={{ marginTop: 24, minHeight: 36, minWidth: 120 }} variant="outlined" type="submit">
-                  {isSearchLoading ? <CircularProgress size={20} /> : "Search"}
+                  {isSearchLoading ? <CircularProgress size={20} /> : 'Search'}
                 </Button>
               </div>
             </Grid>
@@ -181,7 +181,7 @@ function HomeComponent({
                   ) : (
                     (currentPatient && currentPatient.photo && (
                       <Avatar alt={currentPatient.name} src={currentPatient.photo} />
-                    )) || <Avatar>{currentPatient.initials}</Avatar>
+                    )) || <Avatar>{currentPatient && currentPatient.initials}</Avatar>
                   )}
                 </ListItemAvatar>
 

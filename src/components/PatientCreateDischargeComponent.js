@@ -1,34 +1,34 @@
-import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
-import { withStyles } from "@material-ui/core/styles";
-import Modal from "@material-ui/core/Modal";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import Divider from "@material-ui/core/Divider";
-import Grid from "@material-ui/core/Grid";
-import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import Typography from "@material-ui/core/Typography";
-import { red } from "@material-ui/core/colors";
+import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
+import { withStyles } from '@material-ui/core/styles';
+import Modal from '@material-ui/core/Modal';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Divider from '@material-ui/core/Divider';
+import Grid from '@material-ui/core/Grid';
+import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+import { red } from '@material-ui/core/colors';
 
-import StandardLayout from "../layout/StandardLayout";
-import DelayComponent from "./DelayComponent";
+import StandardLayout from '../layout/StandardLayout';
+import DelayComponent from './DelayComponent';
 
 const rootStyles = theme => ({
   columnContainer: {
-    flexWrap: "wrap",
-    [theme.breakpoints.up("md")]: {
-      flexWrap: "nowrap"
+    flexWrap: 'wrap',
+    [theme.breakpoints.up('md')]: {
+      flexWrap: 'nowrap'
     }
   },
   paper: {
-    position: "absolute",
+    position: 'absolute',
     width: 400,
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[5],
     padding: theme.spacing(4),
-    outline: "none"
+    outline: 'none'
   }
 });
 
@@ -56,8 +56,8 @@ function PatientCreateDischarge(props) {
   }, [isSubmitting, dischargeSummaryError, dischargeSummarySubmitting]);
 
   // TEXT
-  const [summary, setSummary] = useState("");
-  const [pdf, setPdf] = useState({ name: "" });
+  const [summary, setSummary] = useState('');
+  const [pdf, setPdf] = useState({ name: '' });
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -87,7 +87,7 @@ function PatientCreateDischarge(props) {
 
   return (
     <StandardLayout>
-      <form style={{ width: "100%" }} onSubmit={handleSubmit}>
+      <form style={{ width: '100%' }} onSubmit={handleSubmit}>
         <Typography variant="h3" gutterBottom>
           Discharge Patient
         </Typography>
@@ -102,7 +102,7 @@ function PatientCreateDischarge(props) {
             container
             direction="row"
             alignItems="center"
-            style={{ textDecoration: "none", color: "inherit", marginBottom: 12 }}
+            style={{ textDecoration: 'none', color: 'inherit', marginBottom: 12 }}
           >
             {(currentPatient && currentPatient.photo && (
               <Avatar alt={currentPatient.name} src={currentPatient.photo} />
@@ -138,7 +138,7 @@ function PatientCreateDischarge(props) {
           <input
             accept="application/pdf,application/vnd.ms-excel"
             className={classes.input}
-            style={{ display: "none" }}
+            style={{ display: 'none' }}
             id="raised-button-file"
             multiple
             type="file"
@@ -152,7 +152,7 @@ function PatientCreateDischarge(props) {
           />
           <label htmlFor="raised-button-file">
             <Button variant="contained" component="span" className={classes.button}>
-              {pdf.name ? pdf.name : "Upload pdf"}
+              {pdf.name ? pdf.name : 'Upload pdf'}
             </Button>
           </label>
         </Grid>
@@ -167,7 +167,7 @@ function PatientCreateDischarge(props) {
           disabled={dischargeSummarySubmitting}
           style={{ width: 120, marginTop: 12, marginRight: 12 }}
         >
-          {dischargeSummarySubmitting ? <CircularProgress size={26} color="inherit" /> : "Submit"}
+          {dischargeSummarySubmitting ? <CircularProgress size={26} color="inherit" /> : 'Submit'}
         </Button>
 
         <Button
@@ -190,7 +190,7 @@ function PatientCreateDischarge(props) {
         <br />
         <br />
         {currentPatientError && (
-          <pre style={{ color: red[500], width: "100%", overflowX: "scroll" }}>
+          <pre style={{ color: red[500], width: '100%', overflowX: 'scroll' }}>
             {JSON.stringify(currentPatientError, null, 2)}
           </pre>
         )}
