@@ -8,6 +8,8 @@ Object {
   "email": "Kloe.Roberson@residents.AdaLovelace.testvillages.rymanhealthcare.com",
   "ethnicity": "NZ European",
   "gender": "unknown",
+  "generalPractitionerId": "2219.2",
+  "generalPractitionerName": "Arnold Leith",
   "initials": "KR",
   "maritalStatus": "Widowed",
   "name": "Kloe Roberson",

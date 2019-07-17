@@ -1,131 +1,58 @@
 import React from 'react';
-import { decorate, observable, computed, action } from 'mobx';
+import { decorate, observable, action } from 'mobx';
 import axios from 'axios';
-import qs from 'qs';
 
 import { credentialsStore } from './CredentialsState';
 import { authStore } from './AuthState';
 
-class PatientState {
-  patientIds = ['2143.1'];
+class PractitionerState {
+  practitionerLoading = {};
+  practitionerError = {};
+  practitioners = {};
 
-  patientLoading = {};
-  patientError = {};
-  patients = {};
-
-  patientSearchLoading = {};
-  patientSearchError = {};
-  patientSearch = {};
-  currentPatientSearch = null;
-  searchBirthdate = '1931-08-18';
-  searchNhi = '';
-
-  constructor() {
-    this.debounceSearchPatient = debounce(this.debounceSearchPatient.bind(this), 200);
-  }
-
-  get currentSearchResult() {
-    return this.patientSearch[this.currentPatientSearch];
-  }
-
-  get isSearchLoading() {
-    return !!this.patientSearchLoading[this.currentPatientSearch];
-  }
-
-  get isSearchError() {
-    return this.patientSearchError[this.currentPatientSearch];
-  }
-
-  searchPatient = async (id, birthdate) => {
-    const currentPatientSearch = `${id}-${birthdate}`;
-    this.searchNhi = id;
-    this.searchBirthdate = birthdate;
-
-    this.currentPatientSearch = currentPatientSearch;
-    this.patientSearchLoading = { ...this.patientSearchLoading, [currentPatientSearch]: true };
-    this.patientSearchError = { ...this.patientSearchError, [currentPatientSearch]: null };
-
-    this.debounceSearchPatient(id, birthdate);
-  };
-
-  debounceSearchPatient = async (id, birthdate) => {
-    const currentPatientSearch = `${id}-${birthdate}`;
-    try {
-      const patient = await searchPatient(id, birthdate);
-      this.patientSearch = { ...this.patientSearch, [currentPatientSearch]: patient };
-    } catch (error) {
-      console.log('Error searching patient', currentPatientSearch, error);
-      if (this.currentPatientSearch === currentPatientSearch) {
-        this.patientSearchError = {
-          ...this.patientSearchError,
-          [currentPatientSearch]: {
-            message: error.message,
-            error: error
-          }
-        };
-      }
-    }
-
-    if (this.currentPatientSearch === currentPatientSearch) {
-      this.patientSearchLoading = { ...this.patientSearchLoading, [currentPatientSearch]: false };
-    }
-  };
-
-  loadPatient = async patientId => {
-    this.patientLoading = { ...this.patientLoading, [patientId]: true };
-    this.patientError = { ...this.patientError, [patientId]: null };
+  loadPractitioner = async practitionerId => {
+    this.practitionerLoading = { ...this.practitionerLoading, [practitionerId]: true };
+    this.practitionerError = { ...this.practitionerError, [practitionerId]: null };
 
     try {
-      const patient = await getPatient(patientId);
-      this.patients = { ...this.patients, [patientId]: patient };
+      const practitioner = await getPractitioner(practitionerId);
+      this.practitioners = { ...this.practitioners, [practitionerId]: practitioner };
     } catch (error) {
-      console.log('Error getting patient', patientId, error);
-      this.patientError = {
-        ...this.patientError,
-        [patientId]: {
+      console.log('Error getting practitioner', practitionerId, error);
+      this.practitionerError = {
+        ...this.practitionerError,
+        [practitionerId]: {
           message: error.message,
           error: error
         }
       };
     }
 
-    this.patientLoading = { ...this.patientLoading, [patientId]: false };
+    this.practitionerLoading = { ...this.practitionerLoading, [practitionerId]: false };
   };
 }
 
-const decorated = decorate(PatientState, {
-  patientIds: observable,
+const decorated = decorate(PractitionerState, {
+  practitionerIds: observable,
 
-  patientLoading: observable,
-  patientError: observable,
-  patients: observable,
+  practitionerLoading: observable,
+  practitionerError: observable,
+  practitioners: observable,
 
-  loadPatient: action,
-
-  currentSearchResult: computed,
-  isSearchLoading: computed,
-  isSearchError: computed,
-
-  searchBirthdate: observable,
-  searchNhi: observable,
-  patientSearchLoading: observable,
-  patientSearchError: observable,
-  patientSearch: observable,
-  searchPatient: action
+  loadPractitioner: action
 });
 
-export const patientStore = new decorated();
+export const practitionerStore = new decorated();
 
-export default React.createContext(patientStore);
+export default React.createContext(practitionerStore);
 
-async function getPatient(patientId) {
-  const { client_id, base_uri, base_path_patient, errorsPatient } = credentialsStore;
+async function getPractitioner(practitionerId) {
+  const { client_id, base_uri, base_path_practitioner, errorsPractitioner } = credentialsStore;
   const { session } = authStore;
   const { id_token } = session || {};
 
   const Authorization = `Bearer ${id_token}`;
-  const url = `${base_uri}${base_path_patient}/${patientId}`;
-  // const proxyUrl = `https://ryman-healthcare-demo-api.busy-bee.now.sh/${url}`;
+  const url = `${base_uri}${base_path_practitioner}/${practitionerId}`;
 
   try {
     const { status, data } = await axios.get(url, {
@@ -140,73 +67,22 @@ async function getPatient(patientId) {
       throw new Error(`Invalid status ${status}`);
     }
 
-    return transformPatient(data);
+    return transformPractitioner(data);
   } catch (error) {
-    console.error('Error getting patient', errorsPatient, patientId, error);
+    console.error('Error getting practitioner', errorsPractitioner, practitionerId, error);
 
     // If errors are enabled
-    if (errorsPatient) {
+    if (errorsPractitioner) {
       throw error;
     }
 
     await wait(getRandomInt(400, 2500));
-    return transformPatient(getDummyPatient());
+    return transformPractitioner(getDummyPractitioner());
   }
 }
 
-async function searchPatient(id, birthdate) {
-  const { client_id, base_uri, base_path_patient, errorsPatient } = credentialsStore;
-  const { session } = authStore;
-  const { id_token } = session || {};
-
-  if (!id || !birthdate) {
-    return null;
-  }
-
-  const params = {
-    identifier: `http://health.govt.nz/nhi|${String(id).trim()}`,
-    birthdate: String(birthdate).trim(),
-    _format: 'json'
-  };
-
-  const Authorization = `Bearer ${id_token}`;
-  const url = `${base_uri}${base_path_patient}/_search?${qs.stringify(params)}`;
-
-  try {
-    const { status, data } = await axios.get(url, {
-      headers: {
-        Accept: 'application/json',
-        Authorization,
-        apikey: client_id
-      }
-    });
-
-    if (status !== 200) {
-      throw new Error(`Invalid status ${status}`);
-    }
-
-    const { issue, error } = data || {};
-    if (issue || error) {
-      return transformPatientSearch(getDummySearchResult());
-    }
-
-    return transformPatientSearch(data);
-  } catch (error) {
-    console.error('Error searching patient', errorsPatient, id, birthdate, error);
-
-    // If errors are enabled
-    if (errorsPatient) {
-      throw error;
-    }
-
-    await wait(getRandomInt(400, 2500));
-    return transformPatientSearch(getDummySearchResult());
-  }
-}
-
-export function transformPatient(patient) {
-  const { photo: photos, extension, name, gender, address, contact, telecom, generalPractitioner, birthDate } =
-    patient || {};
+export function transformPractitioner(practitioner) {
+  const { photo: photos, extension, name, gender, address, contact, telecom, birthDate } = practitioner || {};
 
   // PHOTO
   const [firstPhoto] = photos || [];
@@ -252,14 +128,6 @@ export function transformPatient(patient) {
     };
   });
 
-  // GP
-  const generalPractitionerName = generalPractitioner && generalPractitioner[0] && generalPractitioner[0].display;
-  const generalPractitionerReference =
-    generalPractitioner && generalPractitioner[0] && generalPractitioner[0].reference;
-  const generalPractitionerId =
-    generalPractitionerReference &&
-    generalPractitionerReference.split('/')[generalPractitionerReference.split('/').length - 1];
-
   // EXTENSIONS
   const carePlanExtension = extension.find(({ url }) => url && url.includes('CareLevel'));
   const carePlan = carePlanExtension && carePlanExtension.valueCoding.display;
@@ -267,10 +135,10 @@ export function transformPatient(patient) {
   const ethnicity = ethnicityExtension && ethnicityExtension.valueCoding.display;
 
   // MARITAL STATUS
-  const maritalStatus = patient.maritalStatus && patient.maritalStatus.text;
+  const maritalStatus = practitioner.maritalStatus && practitioner.maritalStatus.text;
 
-  const officialIdentifier = (patient.identifier || []).find(({ use }) => use === 'official');
-  const secondaryIdentifier = (patient.identifier || []).find(({ use }) => use === 'secondary');
+  const officialIdentifier = (practitioner.identifier || []).find(({ use }) => use === 'official');
+  const secondaryIdentifier = (practitioner.identifier || []).find(({ use }) => use === 'secondary');
 
   // RESULT
   return {
@@ -290,88 +158,20 @@ export function transformPatient(patient) {
 
     nextOfKins,
 
-    generalPractitionerId,
-    generalPractitionerName,
-
-    __original__: patient
+    __original__: practitioner
   };
 }
 
-export function transformPatientSearch(patientSearch) {
-  const { entry, total } = patientSearch || {};
-
-  const patientIds = (entry || []).map(({ resource }) => resource && resource.id).filter(id => !!id);
-
+export function getDummyPractitioner() {
   return {
-    patientIds,
-    total
-  };
-}
-
-export function getDummySearchResult() {
-  return {
-    resourceType: 'Bundle',
-    type: 'searchset',
-    total: 1,
-    link: [
-      {
-        relation: 'self',
-        url:
-          'https://apac-syd-partner02-test.apigee.net/rymanfhir/fhir/Patient?identifier=http://health.govt.nz/nhi%7CZGL5346&birthdate=1931-08-18'
-      }
-    ],
-    entry: [
-      {
-        fullUrl: 'https://apac-syd-partner02-test.apigee.net/rymanfhir/fhir/Patient/2143.19',
-        resource: {
-          resourceType: 'Patient',
-          id: '2143.19',
-          identifier: [
-            {
-              use: 'official',
-              system: 'http://health.govt.nz/nhi',
-              value: 'ZGL5346'
-            },
-            {
-              use: 'secondary',
-              system: 'http://rymanhealthcare.co.nz',
-              value: '2143.19'
-            }
-          ],
-          name: [
-            {
-              use: 'official',
-              family: 'Foster',
-              given: ['Willow'],
-              prefix: ['Mr']
-            },
-            {
-              use: 'usual',
-              given: ['Willow']
-            }
-          ],
-          gender: 'unknown',
-          birthDate: '1931-08-18'
-        },
-
-        search: {
-          mode: 'match'
-        }
-      }
-    ]
-  };
-}
-
-export function getDummyPatient() {
-  return {
-    resourceType: 'Patient',
+    resourceType: 'Practitioner',
     id: '2143.19',
     meta: {
       versionId: '6'
     },
     extension: [
       {
-        url: 'http://apac-syd-partner02-test.apigee.net/fhir4-0-0/Extensions/Patient/CareLevel',
+        url: 'http://apac-syd-partner02-test.apigee.net/fhir4-0-0/Extensions/Practitioner/CareLevel',
         valueCoding: {
           system: 'http://rymanhealthcare.co.nz',
           code: 'R-D1',
@@ -379,7 +179,7 @@ export function getDummyPatient() {
         }
       },
       {
-        url: 'http://apac-syd-partner02-test.apigee.net/fhir4-0-0/Extensions/Patient/Ethnicities',
+        url: 'http://apac-syd-partner02-test.apigee.net/fhir4-0-0/Extensions/Practitioner/Ethnicities',
         valueCoding: {
           system: 'http://rymanhealthcare.co.nz',
           code: '11',
@@ -661,22 +461,6 @@ export function getDummyPatient() {
         display: 'Arnold Leith'
       }
     ]
-  };
-}
-
-function debounce(func, wait, immediate) {
-  var timeout;
-  return function() {
-    var context = this,
-      args = arguments;
-    var later = function() {
-      timeout = null;
-      if (!immediate) func.apply(context, args);
-    };
-    var callNow = immediate && !timeout;
-    clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
-    if (callNow) func.apply(context, args);
   };
 }
 

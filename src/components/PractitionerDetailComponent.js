@@ -1,40 +1,40 @@
-import React, { Fragment } from 'react';
-import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
-import { withStyles, makeStyles } from '@material-ui/core/styles';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Grid from '@material-ui/core/Grid';
-import Avatar from '@material-ui/core/Avatar';
-import Card from '@material-ui/core/Card';
-import Divider from '@material-ui/core/Divider';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { red } from '@material-ui/core/colors';
-import IconButton from '@material-ui/core/IconButton';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import React, { Fragment } from "react";
+import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
+import { withStyles, makeStyles } from "@material-ui/core/styles";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import Grid from "@material-ui/core/Grid";
+import Avatar from "@material-ui/core/Avatar";
+import Card from "@material-ui/core/Card";
+import Divider from "@material-ui/core/Divider";
+import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
+import ExpansionPanel from "@material-ui/core/ExpansionPanel";
+import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
+import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import { red } from "@material-ui/core/colors";
+import IconButton from "@material-ui/core/IconButton";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
 
-import StandardLayout from '../layout/StandardLayout';
-import DelayComponent from './DelayComponent';
-import PatientConditionContainer from '../containers/PatientConditionContainer';
+import StandardLayout from "../layout/StandardLayout";
+import DelayComponent from "./DelayComponent";
+import PatientConditionContainer from "../containers/PatientConditionContainer";
 
 const rootStyles = theme => ({
   columnContainer: {
-    flexWrap: 'wrap',
-    [theme.breakpoints.up('md')]: {
-      flexWrap: 'nowrap'
+    flexWrap: "wrap",
+    [theme.breakpoints.up("md")]: {
+      flexWrap: "nowrap"
     }
   }
 });
 
 const useExpansionPanelStyles = makeStyles(theme => ({
   root: {
-    boxShadow: 'none'
+    boxShadow: "none"
   }
 }));
 const useExpansionPanelSummaryStyles = makeStyles(theme => ({
@@ -43,11 +43,11 @@ const useExpansionPanelSummaryStyles = makeStyles(theme => ({
   }
 }));
 
-const DetailItem = ({ label, link, value, noWrap }) => (
-  <Grid item component={link ? Link : 'div'} to={link}>
+const DetailItem = ({ label, value, noWrap }) => (
+  <Grid item>
     <Typography>{label}</Typography>
     <Typography variant="subtitle1" style={{ fontWeight: 700 }} noWrap={noWrap}>
-      {value || 'unknown'}
+      {value || "unknown"}
     </Typography>
   </Grid>
 );
@@ -57,7 +57,7 @@ const DetailGroup = ({ label, items, labelProp, value }) => {
   const classesExpansionPanelSummary = useExpansionPanelSummaryStyles();
 
   const labelProps = [].concat(labelProp);
-  const labelValue = labelProps.map(prop => value[prop]).join(' - ');
+  const labelValue = labelProps.map(prop => value[prop]).join(" - ");
   return (
     <Grid item>
       <ExpansionPanel classes={classesExpansionPanel}>
@@ -106,28 +106,17 @@ const DetailPatient = ({ currentPatient }) => (
       <DetailGroup
         key={nextOfKin && nextOfKin.name}
         label="Contact"
-        labelProp={['name']}
+        labelProp={["name"]}
         items={[
-          { label: 'Name', key: 'name' },
-          { label: 'Phone', key: 'phone', noWrap: true },
-          { label: 'Email', key: 'email' },
-          { label: 'Gender', key: 'gender' },
-          { label: 'Relationship', key: 'relationship' }
+          { label: "Name", key: "name" },
+          { label: "Phone", key: "phone", noWrap: true },
+          { label: "Email", key: "email" },
+          { label: "Gender", key: "gender" },
+          { label: "Relationship", key: "relationship" }
         ]}
         value={nextOfKin}
       />
     ))}
-
-    {currentPatient.generalPractitionerId && (
-      <Fragment>
-        <Divider style={{ marginTop: 12, marginBottom: 12 }} />
-        <DetailItem
-          link={`/practitioner/${currentPatient.generalPractitionerId}`}
-          label="General Practitioner"
-          value={currentPatient.generalPractitionerName}
-        />
-      </Fragment>
-    )}
   </Grid>
 );
 
@@ -137,7 +126,7 @@ const DetailDiagnoses = ({ notes }) => {
       <Typography variant="h6">Conditions</Typography>
       {(notes || []).map(({ id, text }) => (
         <Grid key={id || text} style={{ marginBottom: 12, padding: 12 }}>
-          <Typography>{text || 'unknown'}</Typography>
+          <Typography>{text || "unknown"}</Typography>
         </Grid>
       ))}
     </Grid>
@@ -201,7 +190,7 @@ function PatientDetailComponent(props) {
       )}
 
       {currentPatientError && (
-        <pre style={{ color: red[500], width: '100%', overflowX: 'scroll' }}>
+        <pre style={{ color: red[500], width: "100%", overflowX: "scroll" }}>
           {JSON.stringify(currentPatientError, null, 2)}
         </pre>
       )}
