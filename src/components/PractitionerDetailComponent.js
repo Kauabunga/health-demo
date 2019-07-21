@@ -38,6 +38,8 @@ const DetailPractitioner = ({ currentPractitioner }) => (
     <Divider style={{ marginTop: 12, marginBottom: 12 }} />
     <DetailItem label="Email" value={currentPractitioner.email} noWrap />
     <Divider style={{ marginTop: 12, marginBottom: 12 }} />
+    <DetailItem label="Phone" value={currentPractitioner.phone} noWrap />
+    <Divider style={{ marginTop: 12, marginBottom: 12 }} />
     <DetailItem label="Address" value={currentPractitioner.address} />
     <Divider style={{ marginTop: 12, marginBottom: 12 }} />
   </Grid>

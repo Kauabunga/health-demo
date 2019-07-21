@@ -76,7 +76,7 @@ async function getPractitioner(practitionerId) {
 }
 
 export function transformPractitioner(practitioner) {
-  const { photo: photos, extension, name, gender, address, contact, telecom, birthDate } = practitioner || {};
+  const { photo: photos, name, gender, address, contact, telecom, birthDate } = practitioner || {};
 
   // PHOTO
   const [firstPhoto] = photos || [];
@@ -85,6 +85,9 @@ export function transformPractitioner(practitioner) {
 
   // EMAIL
   const { value: email } = (telecom || []).find(({ system }) => system === 'email') || {};
+
+  // PHONE
+  const { value: phone } = (telecom || []).find(({ system }) => system === 'phone') || {};
 
   // NAME
   const officialName = (name || []).find(({ use }) => use === 'official');
@@ -123,12 +126,6 @@ export function transformPractitioner(practitioner) {
     };
   });
 
-  // EXTENSIONS
-  const carePlanExtension = (extension || []).find(({ url }) => url && url.includes('CareLevel'));
-  const carePlan = carePlanExtension && carePlanExtension.valueCoding.display;
-  const ethnicityExtension = (extension || []).find(({ url }) => url && url.includes('Ethnicities'));
-  const ethnicity = ethnicityExtension && ethnicityExtension.valueCoding.display;
-
   const officialIdentifier = (practitioner.identifier || []).find(({ use }) => use === 'official');
   const secondaryIdentifier = (practitioner.identifier || []).find(({ use }) => use === 'secondary');
 
@@ -140,12 +137,10 @@ export function transformPractitioner(practitioner) {
     initials: formattedInitials,
     email,
     address: prettyAddress,
+    phone,
     birthDate,
     photo,
     gender,
-
-    carePlan,
-    ethnicity,
 
     nextOfKins,
 
